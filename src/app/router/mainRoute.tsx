@@ -1,42 +1,47 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom"
 import { DashboardLayout } from "@layouts/DashboardLayout"
-import { appRoutes } from "./routes/appRoutes"
-import { transactionRoutes } from "./routes/transactionRoutes"
-import { categoryRoutes } from "./routes/categoryRoutes"
-import { budgetRoutes } from "./routes/budgetRoutes"
-import { fallbackRoutes } from "./routes/fallbackRoutes"
-import { planRoutes } from "./routes/planRoutes"
-import { authRoutes } from "./routes/authRoutes"
-import { goalRoutes } from "./routes/goalRoutes"
-import { reportRoutes } from "./routes/reportRoutes"
-import { accountRoutes } from "./routes/accountRoutes"
-import { settingsRoutes } from "./routes/settingsRoutes"
 import { ProtectedRoute } from "./guards/ProtectedRoute"
+import { RoleGuard } from "./guards/RoleGuard"
+import type { UserRole } from "./guards/AuthProvider"
+import { publicRoutes } from "./routes/publicRoutes"
+import { privateRoutes } from "./routes/privateRoutes"
+import { roleRoutes } from "./routes/roleRoutes"
 
-const childRoutes: RouteObject[] = [
-  ...appRoutes,
-  ...transactionRoutes,
-  ...categoryRoutes,
-  ...budgetRoutes,
-  ...planRoutes,
-  ...goalRoutes,
-  ...reportRoutes,
-  ...accountRoutes,
-  ...settingsRoutes,
-]
+const publicTree: RouteObject = {
+  id: "public-routes",
+  children: publicRoutes,
+}
 
-const routes: RouteObject[] = [
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute redirectTo="/auth/login">
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
-    children: childRoutes,
-  },
-  ...authRoutes,
-  ...fallbackRoutes,
-]
+const privateTree: RouteObject = {
+  path: "/",
+  element: (
+    <ProtectedRoute redirectTo="/auth/login">
+      <DashboardLayout />
+    </ProtectedRoute>
+  ),
+  children: privateRoutes,
+}
+
+const roleTrees: RouteObject[] = Object.entries(roleRoutes).flatMap(([role, routes]) => {
+  if (!routes || routes.length === 0) {
+    return []
+  }
+
+  return [
+    {
+      path: "/",
+      element: (
+        <ProtectedRoute redirectTo="/auth/login">
+          <RoleGuard allowedRoles={role as UserRole}>
+            <DashboardLayout />
+          </RoleGuard>
+        </ProtectedRoute>
+      ),
+      children: routes,
+    },
+  ]
+})
+
+const routes: RouteObject[] = [publicTree, privateTree, ...roleTrees]
 
 export const router = createBrowserRouter(routes)

@@ -1,19 +1,6 @@
 import { motion } from "framer-motion"
-import type { ReactNode } from "react"
 import { cn } from "@lib/utils"
-
-export interface TimelineItem {
-  id: string
-  title: string
-  description: string
-  timestamp: string
-  status: "success" | "warning" | "info"
-  icon?: ReactNode
-}
-
-interface ActivityTimelineProps {
-  items: TimelineItem[]
-}
+import type { ActivityTimelineProps, TimelineItem } from "./activity-timeline.props"
 
 const statusColors: Record<TimelineItem["status"], string> = {
   success: "bg-emerald-500",
@@ -50,4 +37,7 @@ export const ActivityTimeline = ({ items }: ActivityTimelineProps) => {
     </ol>
   )
 }
+
+export type { TimelineItem }
+
 

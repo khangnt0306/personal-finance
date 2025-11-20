@@ -1,23 +1,8 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
-import type { ReactNode } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@lib/utils"
-import { fadeSlide, withStagger } from "../../styles"
-
-interface StatItem {
-  id: string
-  label: string
-  value: string
-  helper?: string
-  delta?: number
-  icon?: ReactNode
-}
-
-interface StatGroupProps {
-  items: StatItem[]
-  columns?: 2 | 3 | 4
-  className?: string
-}
+import { fadeSlide, withStagger } from "@styles"
+import type { StatGroupProps } from "./stat-group.props"
 
 export const StatGroup = ({ items, columns = 3, className }: StatGroupProps) => {
   return (
@@ -44,9 +29,7 @@ export const StatGroup = ({ items, columns = 3, className }: StatGroupProps) => 
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  {item.label}
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{item.label}</p>
                 <p className="mt-3 text-3xl font-semibold text-foreground">{item.value}</p>
               </div>
               {item.icon ? (
@@ -64,11 +47,7 @@ export const StatGroup = ({ items, columns = 3, className }: StatGroupProps) => 
                     deltaPositive ? "text-emerald-600" : "text-rose-600"
                   )}
                 >
-                  {deltaPositive ? (
-                    <ArrowUpRight className="mr-1 h-4 w-4" />
-                  ) : (
-                    <ArrowDownRight className="mr-1 h-4 w-4" />
-                  )}
+                  {deltaPositive ? <ArrowUpRight className="mr-1 h-4 w-4" /> : <ArrowDownRight className="mr-1 h-4 w-4" />}
                   {Math.abs(item.delta).toFixed(1)}%
                 </span>
               ) : null}
@@ -79,4 +58,5 @@ export const StatGroup = ({ items, columns = 3, className }: StatGroupProps) => 
     </motion.div>
   )
 }
+
 

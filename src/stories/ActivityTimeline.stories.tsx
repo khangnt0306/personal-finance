@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react"
-import { ActivityTimeline } from "@components/organisms/activity-timeline"
+import { ActivityTimeline } from "@components/organisms/activity-timeline/activity-timeline.view"
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react"
 
 const meta = {

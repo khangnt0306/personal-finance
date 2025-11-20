@@ -1,16 +1,7 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
-import type { ReactNode } from "react"
 import { MotionCard } from "@components/ui/motion-card"
 import { cn } from "@lib/utils"
-
-interface StatTileProps {
-  label: string
-  value: string
-  trend?: number
-  trendLabel?: string
-  icon?: ReactNode
-  delay?: number
-}
+import type { StatTileProps } from "./stat-tile.props"
 
 export const StatTile = ({ label, value, trend, trendLabel, icon, delay = 0 }: StatTileProps) => {
   const trendPositive = (trend ?? 0) >= 0
@@ -29,17 +20,8 @@ export const StatTile = ({ label, value, trend, trendLabel, icon, delay = 0 }: S
         {icon ? <div className="text-primary">{icon}</div> : null}
       </div>
       {trend !== undefined ? (
-        <p
-          className={cn(
-            "mt-4 flex items-center text-sm font-medium",
-            trendPositive ? "text-emerald-600" : "text-rose-600"
-          )}
-        >
-          {trendPositive ? (
-            <ArrowUpRight className="mr-1 h-4 w-4" />
-          ) : (
-            <ArrowDownRight className="mr-1 h-4 w-4" />
-          )}
+        <p className={cn("mt-4 flex items-center text-sm font-medium", trendPositive ? "text-emerald-600" : "text-rose-600")}>
+          {trendPositive ? <ArrowUpRight className="mr-1 h-4 w-4" /> : <ArrowDownRight className="mr-1 h-4 w-4" />}
           {Math.abs(trend).toFixed(1)}%
           {trendLabel ? <span className="ml-1 text-muted-foreground">{trendLabel}</span> : null}
         </p>
@@ -47,4 +29,5 @@ export const StatTile = ({ label, value, trend, trendLabel, icon, delay = 0 }: S
     </MotionCard>
   )
 }
+
 

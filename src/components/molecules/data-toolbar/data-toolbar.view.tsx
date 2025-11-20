@@ -1,26 +1,9 @@
 import { Search } from "lucide-react"
-import type { ReactNode } from "react"
 import { cn } from "@lib/utils"
 import { Input } from "@components/ui/input"
 import { Button } from "@components/ui/button"
+import type { DataToolbarProps } from "./data-toolbar.props"
 
-interface ViewOption {
-  label: string
-  value: string
-  icon?: ReactNode
-}
-
-interface DataToolbarProps {
-  searchPlaceholder?: string
-  searchValue?: string
-  onSearchChange?: (value: string) => void
-  filters?: ReactNode
-  actions?: ReactNode
-  viewOptions?: ViewOption[]
-  currentView?: string
-  onViewChange?: (value: string) => void
-  className?: string
-}
 
 export const DataToolbar = ({
   searchPlaceholder = "Search records…",

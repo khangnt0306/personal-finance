@@ -1,29 +1,8 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import type { ReactNode } from "react"
 import { cn } from "@lib/utils"
-import { fadeSlide, withStagger } from "../../styles"
-
-interface Breadcrumb {
-  label: string
-  href?: string
-}
-
-interface Highlight {
-  label: string
-  value: string
-  helper?: string
-}
-
-interface PageHeaderProps {
-  title: string
-  description?: string
-  breadcrumbs?: Breadcrumb[]
-  highlights?: Highlight[]
-  actions?: ReactNode
-  className?: string
-  children?: ReactNode
-}
+import { fadeSlide, withStagger } from "../../../styles"
+import type { PageHeaderProps } from "./page-header.props"
 
 export const PageHeader = ({
   title,

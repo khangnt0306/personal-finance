@@ -1,22 +1,8 @@
-import type { ReactNode } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@components/ui/button"
 import { cn } from "@lib/utils"
-import { fadeSlide } from "../../styles"
-
-interface EmptyStateProps {
-  title: string
-  description?: string
-  icon?: ReactNode
-  action?: {
-    label: string
-    onClick: () => void
-    variant?: "default" | "secondary" | "outline" | "subtle" | "ghost" | "link" | "destructive" | "glass"
-  }
-  secondaryAction?: ReactNode
-  className?: string
-  children?: ReactNode
-}
+import { fadeSlide } from "../../../styles"
+import type { EmptyStateProps } from "./empty-state.props"
 
 export const EmptyState = ({
   title,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react"
-import { AnimatedHero } from "@components/organisms/animated-hero"
+import { AnimatedHero } from "@components/organisms/animated-hero/animated-hero.view"
 
 const meta = {
   title: "Organisms/AnimatedHero",

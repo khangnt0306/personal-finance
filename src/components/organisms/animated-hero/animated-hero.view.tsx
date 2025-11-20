@@ -1,14 +1,6 @@
 import { motion } from "framer-motion"
-import type { ReactNode } from "react"
 import { MotionButton } from "@components/ui/motion-button"
-
-interface AnimatedHeroProps {
-  title: string
-  subtitle: string
-  ctaLabel: string
-  onCtaClick?: () => void
-  prefix?: ReactNode
-}
+import type { AnimatedHeroProps } from "./animated-hero.props"
 
 export const AnimatedHero = ({ title, subtitle, ctaLabel, onCtaClick, prefix }: AnimatedHeroProps) => {
   return (
@@ -30,4 +22,5 @@ export const AnimatedHero = ({ title, subtitle, ctaLabel, onCtaClick, prefix }: 
     </div>
   )
 }
+
 

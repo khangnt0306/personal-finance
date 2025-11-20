@@ -1,23 +1,14 @@
 import type { RouteObject } from "react-router-dom"
 import { GoalsPage, GoalDetailPage } from "@features/goals"
-import { ProtectedRoute } from "../guards/ProtectedRoute"
 
 export const goalRoutes: RouteObject[] = [
   {
     path: "goals",
-    element: (
-      <ProtectedRoute>
-        <GoalsPage />
-      </ProtectedRoute>
-    ),
+    element: <GoalsPage />,
   },
   {
     path: "goals/:id",
-    element: (
-      <ProtectedRoute>
-        <GoalDetailPage />
-      </ProtectedRoute>
-    ),
+    element: <GoalDetailPage />,
   },
 ]
 
