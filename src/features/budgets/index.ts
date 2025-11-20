@@ -1,5 +1,6 @@
 export { BudgetsPage } from "./pages/BudgetsPage"
 export { BudgetListPage } from "./pages/BudgetListPage"
+export { BudgetDetailPage } from "./pages/BudgetDetailPage"
 export { useBudgets } from "./hooks/useBudgets"
 export { budgetService } from "./services/budget.service"
 export { BudgetDetailCard } from "./components/BudgetDetailCard"

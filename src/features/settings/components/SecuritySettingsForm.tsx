@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@components/ui/form"
-import { Switch } from "lucide-react"
+import { Switch } from "@components/ui/switch"
 
 interface SecurityFormValues {
   currentPassword: string
@@ -96,15 +96,15 @@ export const SecuritySettingsForm = () => {
                   <FormLabel>MFA</FormLabel>
                   <p className="text-sm text-muted-foreground">Protect logins with Authenticator prompts.</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => field.onChange(!field.value)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold ${
-                    field.value ? "border-emerald-400 text-emerald-300" : "border-muted text-muted-foreground"
-                  }`}
-                >
-                  <Switch className="h-4 w-4" /> {field.value ? "Enabled" : "Disabled"}
-                </button>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                  <span className="text-sm font-medium">
+                    {field.value ? "Enabled" : "Disabled"}
+                  </span>
+                </div>
               </FormItem>
             )}
           />

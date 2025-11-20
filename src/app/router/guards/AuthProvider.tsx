@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react"
+import { authService } from "@features/auth/services/auth.service"
 
 const STORAGE_KEY = "pf_auth_state"
 
@@ -24,8 +25,14 @@ interface AuthState {
   user: UserProfile
 }
 
+interface LoginOptions {
+  token: string
+  role?: UserRole
+  profile?: Partial<UserProfile>
+}
+
 interface AuthContextValue extends AuthState {
-  login: (role?: UserRole, profileOverrides?: Partial<UserProfile>) => void
+  login: (options: LoginOptions) => void
   logout: () => void
   switchRole: (role: UserRole) => void
   updateUser: (profile: Partial<UserProfile>) => void
@@ -37,8 +44,8 @@ const defaultUser: UserProfile = {
   avatar: "https://api.dicebear.com/9.x/micah/svg?seed=Jordan%20Wells",
 }
 
-const defaultState: AuthState = {
-  isAuthenticated: true,
+const baseState: AuthState = {
+  isAuthenticated: false,
   role: "user",
   user: defaultUser,
 }
@@ -52,18 +59,28 @@ const sanitizeUser = (user?: Partial<UserProfile>): UserProfile => ({
 })
 
 const readStoredState = (): AuthState => {
+  const token = authService.getToken()
+  const hasToken = Boolean(token)
+
+  if (typeof window === "undefined") {
+    return { ...baseState }
+  }
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return defaultState
+    if (!stored) {
+      return { ...baseState, isAuthenticated: hasToken }
+    }
+
     const parsed = JSON.parse(stored) as AuthState
+
     return {
-      isAuthenticated:
-        typeof parsed.isAuthenticated === "boolean" ? parsed.isAuthenticated : defaultState.isAuthenticated,
-      role: parsed.role === "admin" || parsed.role === "user" ? parsed.role : defaultState.role,
+      isAuthenticated: hasToken,
+      role: parsed.role === "admin" || parsed.role === "user" ? parsed.role : baseState.role,
       user: sanitizeUser(parsed.user),
     }
   } catch {
-    return defaultState
+    return { ...baseState, isAuthenticated: hasToken }
   }
 }
 
@@ -74,16 +91,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(authState))
   }, [authState])
 
-  const login = useCallback((role: UserRole = "user", profileOverrides?: Partial<UserProfile>) => {
+  const login = useCallback(({ token, role = "user", profile }: LoginOptions) => {
+    authService.saveToken(token)
     setAuthState((prev) => ({
       isAuthenticated: true,
       role,
-      user: sanitizeUser({ ...prev.user, ...profileOverrides }),
+      user: sanitizeUser({ ...prev.user, ...profile }),
     }))
   }, [])
 
   const logout = useCallback(() => {
-    setAuthState({ isAuthenticated: false, role: "user", user: defaultUser })
+    authService.clearToken()
+    setAuthState({ ...baseState })
   }, [])
 
   const switchRole = useCallback((role: UserRole) => {

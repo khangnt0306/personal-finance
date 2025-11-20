@@ -7,6 +7,11 @@ import { budgetRoutes } from "./routes/budgetRoutes"
 import { fallbackRoutes } from "./routes/fallbackRoutes"
 import { planRoutes } from "./routes/planRoutes"
 import { authRoutes } from "./routes/authRoutes"
+import { goalRoutes } from "./routes/goalRoutes"
+import { reportRoutes } from "./routes/reportRoutes"
+import { accountRoutes } from "./routes/accountRoutes"
+import { settingsRoutes } from "./routes/settingsRoutes"
+import { ProtectedRoute } from "./guards/ProtectedRoute"
 
 const childRoutes: RouteObject[] = [
   ...appRoutes,
@@ -14,12 +19,20 @@ const childRoutes: RouteObject[] = [
   ...categoryRoutes,
   ...budgetRoutes,
   ...planRoutes,
+  ...goalRoutes,
+  ...reportRoutes,
+  ...accountRoutes,
+  ...settingsRoutes,
 ]
 
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <DashboardLayout />,
+    element: (
+      <ProtectedRoute redirectTo="/auth/login">
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
     children: childRoutes,
   },
   ...authRoutes,

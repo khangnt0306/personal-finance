@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm, type Resolver, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,11 +15,18 @@ import {
 import { AuthShell } from "../components/AuthShell"
 import { loginSchema, type LoginFormValues } from "../validation/auth.schemas"
 import { useAuth } from "@app/router/guards/AuthProvider"
+import { authService } from "@features/auth/services/auth.service"
 
 export const LoginPage = () => {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, isAuthenticated } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true })
+    }
+  }, [isAuthenticated, navigate])
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema) as Resolver<LoginFormValues>,
@@ -33,8 +40,11 @@ export const LoginPage = () => {
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
     try {
       setIsSubmitting(true)
-      await new Promise((resolve) => setTimeout(resolve, 600))
-      login("user", { email: values.email, name: "Jordan Wells" })
+      const response = await authService.login(values)
+      login({
+        token: response.token,
+        profile: response.user,
+      })
       navigate("/", { replace: true })
     } catch (error) {
       console.error(error)

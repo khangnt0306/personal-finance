@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { Button } from "@components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, AlertCircle, Calendar } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import { DataToolbar, PageHeader } from "@components/molecules"
 import { PlanList } from "../components/plan-list"
@@ -13,6 +13,11 @@ import {
 } from "../api/plan.api"
 import type { Plan, PlanPriority, PlanStatus } from "../types"
 import type { PlanFormData } from "../validation/plan.schemas"
+import { Skeleton } from "@components/ui/skeleton"
+import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip"
+import { DatePicker } from "@components/ui/date-picker"
+import { parseISO, isAfter, isBefore } from "date-fns"
 
 export const PlansPage = () => {
   const { data, isLoading, isFetching, refetch } = useGetPlansQuery({})
@@ -49,6 +54,16 @@ export const PlansPage = () => {
       inProgress,
       onHold,
     }
+  }, [plans])
+
+  const upcomingDeadlines = useMemo(() => {
+    const now = new Date()
+    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+    return plans.filter((plan) => {
+      if (!plan.deadline || plan.status === "completed") return false
+      const deadline = parseISO(plan.deadline)
+      return isAfter(deadline, now) && isBefore(deadline, nextWeek)
+    })
   }, [plans])
 
   const handleOpenModal = (plan?: Plan | null) => {
@@ -91,24 +106,42 @@ export const PlansPage = () => {
   }
 
   return (
-    <div className="space-y-8">
-      <PageHeader
-        title="Plans"
-        description="Organize long-term goals, monitor progress, and celebrate milestones with clarity."
-        breadcrumbs={[{ label: "Dashboard" }, { label: "Plans" }]}
-        actions={
-          <Button size="lg" onClick={() => handleOpenModal()}>
-            <Plus className="mr-2 h-4 w-4" />
-            New plan
-          </Button>
-        }
-        highlights={[
-          { label: "Total plans", value: stats.total.toString() },
-          { label: "In progress", value: stats.inProgress.toString(), helper: "active" },
-          { label: "Completed", value: stats.completed.toString(), helper: "celebrated wins" },
-          { label: "On hold", value: stats.onHold.toString(), helper: "paused" },
-        ]}
-      />
+    <TooltipProvider>
+      <div className="space-y-8">
+        <PageHeader
+          title="Plans"
+          description="Organize long-term goals, monitor progress, and celebrate milestones with clarity."
+          breadcrumbs={[{ label: "Dashboard" }, { label: "Plans" }]}
+          actions={
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="lg" onClick={() => handleOpenModal()}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New plan
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Create a new financial plan or goal</p>
+              </TooltipContent>
+            </Tooltip>
+          }
+          highlights={[
+            { label: "Total plans", value: stats.total.toString() },
+            { label: "In progress", value: stats.inProgress.toString(), helper: "active" },
+            { label: "Completed", value: stats.completed.toString(), helper: "celebrated wins" },
+            { label: "On hold", value: stats.onHold.toString(), helper: "paused" },
+          ]}
+        />
+
+        {upcomingDeadlines.length > 0 && (
+          <Alert variant="warning">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Upcoming Deadlines</AlertTitle>
+            <AlertDescription>
+              {upcomingDeadlines.length} plan{upcomingDeadlines.length > 1 ? "s" : ""} {upcomingDeadlines.length > 1 ? "have" : "has"} deadlines in the next 7 days
+            </AlertDescription>
+          </Alert>
+        )}
 
       <DataToolbar
         searchValue={searchTerm}
@@ -154,12 +187,20 @@ export const PlansPage = () => {
         }
       />
 
-      <PlanList
-        plans={filteredPlans}
-        onEdit={handleOpenModal}
-        onDelete={handleDelete}
-        isLoading={isLoading || isFetching}
-      />
+        {isLoading || isFetching ? (
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-24 w-full" />
+            ))}
+          </div>
+        ) : (
+          <PlanList
+            plans={filteredPlans}
+            onEdit={handleOpenModal}
+            onDelete={handleDelete}
+            isLoading={false}
+          />
+        )}
 
       <PlanFormModal
         open={isModalOpen}
@@ -174,7 +215,8 @@ export const PlansPage = () => {
         onSubmit={handleSubmit}
         isSubmitting={isCreating || isUpdating}
       />
-    </div>
+      </div>
+    </TooltipProvider>
   )
 }
 

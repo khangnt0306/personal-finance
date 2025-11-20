@@ -90,10 +90,10 @@ export const DashboardLayout = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Personal finance
             </p>
-            <p className="text-xl font-semibold text-foreground">Aurora</p>
+            <p className="text-2xl font-semibold text-foreground">FinK</p>
           </div>
         </div>
-        <div className="mt-6 flex items-center gap-3 rounded-2xl border border-border/60 bg-white/60 p-3 shadow-soft dark:bg-surface-elevated/70">
+        <Link to="/accounts" className="mt-6 flex items-center gap-3 rounded-2xl border border-border/60 bg-white/60 p-3 shadow-soft hover:shadow-sky-200 transition-all duration-200 ">
           {user.avatar ? (
             <span className="relative inline-flex h-12 w-12 overflow-hidden rounded-2xl border border-white/30 bg-primary/10">
               <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
@@ -107,7 +107,7 @@ export const DashboardLayout = () => {
             <p className="truncate text-sm font-semibold text-foreground">{user.name}</p>
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
-        </div>
+        </Link>
         <nav className="mt-10 flex flex-1 flex-col gap-2">
           {navigation.map((item) => {
             const isActive =
