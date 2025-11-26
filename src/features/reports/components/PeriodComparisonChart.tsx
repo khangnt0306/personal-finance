@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
+import { formatCurrency } from "@core/utils/format"
 
 const periods = [
   { label: "Jan", income: 12500, expense: 9800 },
@@ -12,8 +13,8 @@ export const PeriodComparisonChart = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Period comparison</CardTitle>
-        <CardDescription>Income vs expense</CardDescription>
+        <CardTitle>So sánh theo giai đoạn</CardTitle>
+        <CardDescription>Thu nhập và chi tiêu</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {periods.map((period) => (
@@ -21,7 +22,7 @@ export const PeriodComparisonChart = () => {
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>{period.label}</span>
               <span>
-                ${period.expense.toLocaleString()} vs ${period.income.toLocaleString()}
+                {formatCurrency(period.expense)} vs {formatCurrency(period.income)}
               </span>
             </div>
             <div className="space-y-1">
@@ -32,7 +33,7 @@ export const PeriodComparisonChart = () => {
                     style={{ width: `${(period.expense / max) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-rose-200">Expense</span>
+                <span className="text-xs text-rose-200">Chi tiêu</span>
               </div>
               <div className="flex gap-2">
                 <div className="h-3 flex-1 rounded-full bg-emerald-500/20">
@@ -41,7 +42,7 @@ export const PeriodComparisonChart = () => {
                     style={{ width: `${(period.income / max) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-emerald-200">Income</span>
+                <span className="text-xs text-emerald-200">Thu nhập</span>
               </div>
             </div>
           </div>

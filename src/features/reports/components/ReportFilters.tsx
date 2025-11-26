@@ -2,8 +2,8 @@ import { useState } from "react"
 import { Button } from "@components/ui/button"
 import { Badge } from "@components/ui/badge"
 
-const reportViews = ["Cashflow", "Spending", "Income", "Net worth"]
-const frequencies = ["Monthly", "Quarterly", "Year-to-date"]
+const reportViews = ["Dòng tiền", "Chi tiêu", "Thu nhập", "Giá trị ròng"]
+const frequencies = ["Hàng tháng", "Hàng quý", "Từ đầu năm"]
 
 export const ReportFilters = () => {
   const [view, setView] = useState("Cashflow")
@@ -13,7 +13,7 @@ export const ReportFilters = () => {
     <div className="rounded-3xl border border-border/60 bg-card/80 p-6">
       <div className="space-y-4">
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">View</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">Chế độ xem</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {reportViews.map((item) => (
               <Badge
@@ -28,7 +28,7 @@ export const ReportFilters = () => {
           </div>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">Frequency</p>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">Chu kỳ</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {frequencies.map((item) => (
               <button
@@ -51,7 +51,7 @@ export const ReportFilters = () => {
         <span>
           {view} · {frequency}
         </span>
-        <Button className="w-full sm:w-auto">Run report</Button>
+        <Button className="w-full sm:w-auto">Tạo báo cáo</Button>
       </div>
     </div>
   )

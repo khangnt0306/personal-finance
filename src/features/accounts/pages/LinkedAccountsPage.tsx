@@ -29,23 +29,23 @@ export const LinkedAccountsPage = () => {
     <TooltipProvider>
       <div className="space-y-8">
         <header className="space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Accounts</p>
-          <h1 className="text-3xl font-semibold text-white">Linked institutions</h1>
-          <p className="text-muted-foreground">Monitor balances in real time with full sync visibility.</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Tài khoản</p>
+          <h1 className="text-3xl font-semibold text-white">Ngân hàng đã liên kết</h1>
+          <p className="text-muted-foreground">Theo dõi số dư theo thời gian thực với trạng thái đồng bộ rõ ràng.</p>
         </header>
 
         {accountsNeedingAttention.length > 0 && (
           <Alert variant="warning">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Sync Issues Detected</AlertTitle>
+            <AlertTitle>Phát hiện lỗi đồng bộ</AlertTitle>
             <AlertDescription>
-              {accountsNeedingAttention.length} account{accountsNeedingAttention.length > 1 ? "s" : ""} {accountsNeedingAttention.length > 1 ? "need" : "needs"} attention. Please check sync status.
+              Có {accountsNeedingAttention.length} tài khoản cần kiểm tra. Vui lòng xem lại trạng thái đồng bộ.
             </AlertDescription>
           </Alert>
         )}
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">{accounts.length} connections</p>
+          <p className="text-sm text-muted-foreground">{accounts.length} kết nối</p>
           <Tooltip>
             <TooltipTrigger asChild>
               <div>
@@ -53,7 +53,7 @@ export const LinkedAccountsPage = () => {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Add a new bank account or financial institution</p>
+              <p>Thêm ngân hàng hoặc tổ chức tài chính mới</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -83,7 +83,7 @@ export const LinkedAccountsPage = () => {
                       <TooltipTrigger asChild>
                         <div className="flex items-center gap-2">
                           <Label htmlFor={`sync-${account.id}`} className="text-sm cursor-pointer">
-                            Auto-sync
+                            Tự động đồng bộ
                           </Label>
                           <Switch
                             id={`sync-${account.id}`}
@@ -95,7 +95,7 @@ export const LinkedAccountsPage = () => {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>Enable automatic synchronization for this account</p>
+                        <p>Bật đồng bộ tự động cho tài khoản này</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>

@@ -19,27 +19,27 @@ export const SyncAccountModal = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="secondary" className="w-full sm:w-auto">
-          Sync new account
+          Đồng bộ tài khoản mới
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Link institution</DialogTitle>
-          <DialogDescription>Securely connect in under 60 seconds.</DialogDescription>
+          <DialogTitle>Liên kết ngân hàng</DialogTitle>
+          <DialogDescription>Kết nối an toàn chỉ trong vài giây.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <label className="space-y-1 text-sm">
-            <span className="text-muted-foreground">Institution</span>
+            <span className="text-muted-foreground">Tên ngân hàng</span>
             <Input value={institution} onChange={(event) => setInstitution(event.target.value)} />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="text-muted-foreground">Nickname</span>
+            <span className="text-muted-foreground">Ghi nhớ</span>
             <Input value={nickname} onChange={(event) => setNickname(event.target.value)} />
           </label>
         </div>
         <DialogFooter>
-          <Button variant="secondary">Cancel</Button>
-          <Button>Continue</Button>
+          <Button variant="secondary">Hủy</Button>
+          <Button>Tiếp tục</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

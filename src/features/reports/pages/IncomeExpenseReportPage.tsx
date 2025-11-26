@@ -10,9 +10,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@c
 import { Info, TrendingUp } from "lucide-react"
 
 const highlights = [
-  { label: "Income", value: "$40,200", helper: "+12% vs last quarter", tooltip: "Total income for the selected period" },
-  { label: "Expenses", value: "$31,840", helper: "-6% vs last quarter", tooltip: "Total expenses for the selected period" },
-  { label: "Operating margin", value: "27%", helper: "+3 pts", tooltip: "Net income as percentage of total income" },
+  { label: "Thu nhập", value: "$40,200", helper: "+12% so với quý trước", tooltip: "Tổng thu nhập trong giai đoạn đã chọn" },
+  { label: "Chi tiêu", value: "$31,840", helper: "-6% so với quý trước", tooltip: "Tổng chi tiêu trong giai đoạn đã chọn" },
+  { label: "Biên lợi nhuận", value: "27%", helper: "+3 điểm", tooltip: "Lợi nhuận ròng trên tổng thu nhập" },
 ]
 
 export const IncomeExpenseReportPage = () => {
@@ -24,35 +24,35 @@ export const IncomeExpenseReportPage = () => {
     <TooltipProvider>
       <div className="space-y-8">
         <header className="space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Reports</p>
-          <h1 className="text-3xl font-semibold text-white">Income vs expense</h1>
-          <p className="text-muted-foreground">Build instant slides from tailor-made insights.</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Báo cáo</p>
+          <h1 className="text-3xl font-semibold text-white">Thu nhập vs chi tiêu</h1>
+          <p className="text-muted-foreground">Tạo báo cáo tức thì với các insight được cá nhân hoá.</p>
         </header>
 
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="text-sm text-muted-foreground mb-2 block">Start Date</label>
+            <label className="text-sm text-muted-foreground mb-2 block">Ngày bắt đầu</label>
             <DatePicker
               date={startDate}
               onDateChange={setStartDate}
-              placeholder="Select start date"
+              placeholder="Chọn ngày bắt đầu"
             />
           </div>
           <div className="flex-1">
-            <label className="text-sm text-muted-foreground mb-2 block">End Date</label>
+            <label className="text-sm text-muted-foreground mb-2 block">Ngày kết thúc</label>
             <DatePicker
               date={endDate}
               onDateChange={setEndDate}
-              placeholder="Select end date"
+              placeholder="Chọn ngày kết thúc"
             />
           </div>
         </div>
 
         <Alert variant="info">
           <TrendingUp className="h-4 w-4" />
-          <AlertTitle>Report Insights</AlertTitle>
+          <AlertTitle>Nhận xét nổi bật</AlertTitle>
           <AlertDescription>
-            Your financial trends show positive growth. Consider reviewing detailed breakdowns below.
+            Các xu hướng tài chính đang tăng trưởng tích cực. Hãy xem thêm chi tiết bên dưới.
           </AlertDescription>
         </Alert>
 
@@ -97,8 +97,8 @@ export const IncomeExpenseReportPage = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Insights</CardTitle>
-            <CardDescription>Auto-generated from your ledger</CardDescription>
+            <CardTitle>Nhận xét</CardTitle>
+            <CardDescription>Tự động tổng hợp từ sổ giao dịch</CardDescription>
           </CardHeader>
           <CardContent>
             <Accordion type="single" collapsible className="w-full">
@@ -106,14 +106,14 @@ export const IncomeExpenseReportPage = () => {
                 <AccordionTrigger>
                   <div className="flex items-center gap-2">
                     <Info className="h-4 w-4 text-primary" />
-                    <span>View detailed insights</span>
+                    <span>Xem chi tiết</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3 text-sm text-muted-foreground">
-                    <p>• Dining spend tapered 11% after introducing the smart allowance workflow.</p>
-                    <p>• Income volatility index remains low thanks to payroll predictability.</p>
-                    <p>• Your surplus can fund remaining savings targets in 8 weeks.</p>
+                    <p>• Chi tiêu ăn uống giảm 11% sau khi áp dụng hạn mức thông minh.</p>
+                    <p>• Chỉ số biến động thu nhập thấp nhờ lịch trả lương ổn định.</p>
+                    <p>• Phần dư hiện tại có thể hoàn tất mục tiêu tiết kiệm trong 8 tuần.</p>
                   </div>
                 </AccordionContent>
               </AccordionItem>

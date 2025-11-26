@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
 import { Wallet } from "lucide-react"
+import { formatCurrency } from "@core/utils/format"
 
 export interface BankAccountCardProps {
   id: string
@@ -12,9 +13,9 @@ export interface BankAccountCardProps {
 }
 
 const statusLabel: Record<BankAccountCardProps["status"], string> = {
-  healthy: "Synced",
-  syncing: "Syncing",
-  attention: "Action required",
+  healthy: "Đã đồng bộ",
+  syncing: "Đang đồng bộ",
+  attention: "Cần xử lý",
 }
 
 const statusTone: Record<BankAccountCardProps["status"], string> = {
@@ -36,10 +37,10 @@ export const BankAccountCard = ({ name, institution, balance, lastSync, status }
           </Badge>
         </div>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>Last sync {lastSync}</CardDescription>
+        <CardDescription>Đồng bộ lần cuối {lastSync}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-3xl font-semibold text-white">${balance.toLocaleString()}</p>
+        <p className="text-3xl font-semibold text-white">{formatCurrency(balance)}</p>
       </CardContent>
     </Card>
   )

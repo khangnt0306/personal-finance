@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@components/ui/accordion"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip"
 import { Info } from "lucide-react"
+import { formatCurrency } from "@core/utils/format"
 
 export const SpendingAnalysisPage = () => {
   const [startDate, setStartDate] = useState<Date | undefined>(new Date())
@@ -22,53 +23,53 @@ export const SpendingAnalysisPage = () => {
     <TooltipProvider>
       <div className="space-y-8">
         <header className="space-y-2">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Reports</p>
-          <h1 className="text-3xl font-semibold text-white">Spending Analysis</h1>
-          <p className="text-muted-foreground">Deep dive into your spending patterns and trends.</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">Báo cáo</p>
+          <h1 className="text-3xl font-semibold text-white">Phân tích chi tiêu</h1>
+          <p className="text-muted-foreground">Đào sâu các mô hình và xu hướng chi tiêu của bạn.</p>
         </header>
 
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="text-sm text-muted-foreground mb-2 block">Start Date</label>
+            <label className="text-sm text-muted-foreground mb-2 block">Ngày bắt đầu</label>
             <DatePicker
               date={startDate}
               onDateChange={setStartDate}
-              placeholder="Select start date"
+              placeholder="Chọn ngày bắt đầu"
             />
           </div>
           <div className="flex-1">
-            <label className="text-sm text-muted-foreground mb-2 block">End Date</label>
+            <label className="text-sm text-muted-foreground mb-2 block">Ngày kết thúc</label>
             <DatePicker
               date={endDate}
               onDateChange={setEndDate}
-              placeholder="Select end date"
+              placeholder="Chọn ngày kết thúc"
             />
           </div>
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="categories">By Category</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
+            <TabsTrigger value="overview">Tổng quan</TabsTrigger>
+            <TabsTrigger value="categories">Theo danh mục</TabsTrigger>
+            <TabsTrigger value="trends">Xu hướng</TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Total Spending</CardTitle>
-                <CardDescription>Period: {startDate?.toLocaleDateString()} - {endDate?.toLocaleDateString()}</CardDescription>
+                <CardTitle>Tổng chi tiêu</CardTitle>
+                <CardDescription>Khoảng thời gian: {startDate?.toLocaleDateString()} - {endDate?.toLocaleDateString()}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-4xl font-bold">$3,560</div>
-                <p className="text-sm text-muted-foreground mt-2">Average daily spending: $118.67</p>
+                <div className="text-4xl font-bold">{formatCurrency(3560)}</div>
+                <p className="text-sm text-muted-foreground mt-2">Trung bình mỗi ngày: {formatCurrency(118.67)}</p>
               </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="categories" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Spending by Category</CardTitle>
-                <CardDescription>Breakdown of expenses by category</CardDescription>
+                <CardTitle>Chi tiêu theo danh mục</CardTitle>
+                <CardDescription>Phân bổ chi tiết theo từng nhóm</CardDescription>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible className="w-full">
@@ -80,10 +81,10 @@ export const SpendingAnalysisPage = () => {
                           <div className="flex items-center gap-4">
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="text-sm font-semibold">${category.amount}</span>
+                                <span className="text-sm font-semibold">{formatCurrency(category.amount)}</span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>{category.percentage}% of total spending</p>
+                                <p>{category.percentage}% tổng chi tiêu</p>
                               </TooltipContent>
                             </Tooltip>
                             <span className="text-sm text-muted-foreground">{category.percentage}%</span>
@@ -92,9 +93,9 @@ export const SpendingAnalysisPage = () => {
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="space-y-2 text-sm text-muted-foreground">
-                          <p>• {category.amount} transactions in this category</p>
-                          <p>• Average transaction: ${(category.amount / 10).toFixed(2)}</p>
-                          <p>• Top merchant: Sample Merchant</p>
+                          <p>• {category.amount} giao dịch trong danh mục này</p>
+                          <p>• Giao dịch trung bình: {formatCurrency(Number((category.amount / 10).toFixed(2)))}</p>
+                          <p>• Nhà cung cấp nổi bật: Ví dụ Merchant</p>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -106,21 +107,21 @@ export const SpendingAnalysisPage = () => {
           <TabsContent value="trends" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Spending Trends</CardTitle>
-                <CardDescription>Monthly comparison and patterns</CardDescription>
+                <CardTitle>Xu hướng chi tiêu</CardTitle>
+                <CardDescription>So sánh theo tháng và mô hình biến động</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">This month</span>
-                    <span className="font-semibold">$3,560</span>
+                    <span className="text-sm text-muted-foreground">Tháng này</span>
+                    <span className="font-semibold">{formatCurrency(3560)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Last month</span>
-                    <span className="font-semibold">$3,240</span>
+                    <span className="text-sm text-muted-foreground">Tháng trước</span>
+                    <span className="font-semibold">{formatCurrency(3240)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Change</span>
+                    <span className="text-sm text-muted-foreground">Chênh lệch</span>
                     <span className="font-semibold text-green-600">+9.9%</span>
                   </div>
                 </div>
@@ -133,14 +134,14 @@ export const SpendingAnalysisPage = () => {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Info className="h-4 w-4 text-primary" />
-              <CardTitle>Insights</CardTitle>
+              <CardTitle>Gợi ý</CardTitle>
             </div>
-            <CardDescription>AI-powered spending recommendations</CardDescription>
+            <CardDescription>Gợi ý tối ưu chi tiêu</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>• Your spending on Food & Dining increased by 15% this month</p>
-            <p>• Consider setting a budget for Shopping category to control expenses</p>
-            <p>• Transportation costs are below average - great job!</p>
+            <p>• Chi tiêu Ăn uống tăng 15% trong tháng này</p>
+            <p>• Hãy cân nhắc đặt ngân sách cho danh mục Mua sắm để kiểm soát tốt hơn</p>
+            <p>• Chi phí Di chuyển đang thấp hơn trung bình – rất tốt!</p>
           </CardContent>
         </Card>
       </div>
