@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Dialog,
@@ -15,11 +15,11 @@ import { Textarea } from "@components/ui/textarea"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@components/ui/form"
 import {
   Select,
@@ -30,6 +30,7 @@ import {
 } from "@components/ui/select"
 import { Badge } from "@components/ui/badge"
 import { Card, CardContent } from "@components/ui/card"
+import { Switch } from "@components/ui/switch"
 import { FolderOpen } from "lucide-react"
 import { planItemSchema, type PlanItemFormData } from "../validation/plan.schemas"
 import type { PlanItem } from "../types"
@@ -62,7 +63,7 @@ export const PlanItemFormModal = ({
   })
 
   const form = useForm<PlanItemFormData>({
-    resolver: zodResolver(planItemSchema),
+    resolver: zodResolver(planItemSchema) as Resolver<PlanItemFormData>,
     defaultValues: {
       name: "",
       amount: 0,
@@ -70,6 +71,7 @@ export const PlanItemFormModal = ({
       type: "EXPENSE",
       excludeType: "FIXED",
       categoryId: "",
+      isDailyBased: false,
       minimumPercentage: undefined,
     },
   })
@@ -84,12 +86,15 @@ export const PlanItemFormModal = ({
       if (item) {
         form.reset({
           name: item.name,
-          amount: item.amount,
+          amount: typeof item.amount === "string" ? parseFloat(item.amount) : item.amount,
           description: item.description || "",
           type: item.type,
           excludeType: item.excludeType,
           categoryId: item.categoryId,
-          minimumPercentage: item.minimumPercentage,
+          isDailyBased: item.isDailyBased,
+          minimumPercentage: item.minimumPercentage ? 
+            (typeof item.minimumPercentage === "string" ? parseFloat(item.minimumPercentage) : item.minimumPercentage) 
+            : undefined,
         })
         // Load category from API response
         if (categoriesResponse?.categories) {
@@ -104,6 +109,7 @@ export const PlanItemFormModal = ({
           type: "EXPENSE",
           excludeType: "FIXED",
           categoryId: "",
+          isDailyBased: false,
           minimumPercentage: undefined,
         })
         setSelectedCategory(null)
@@ -236,6 +242,28 @@ export const PlanItemFormModal = ({
                   )}
                 />
               </div>
+
+              {/* Daily Based Switch */}
+              <FormField
+                control={form.control}
+                name="isDailyBased"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between rounded-lg border p-3">
+                    <div className="space-y-0.5">
+                      <FormLabel>Daily Based</FormLabel>
+                      <FormDescription>
+                        Track this item on a daily basis
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
               {/* Category Selection */}
               <FormField

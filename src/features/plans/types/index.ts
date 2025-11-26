@@ -28,13 +28,17 @@ export interface Plan {
 export interface PlanItem {
   id: string
   planId: string
-  name: string
-  amount: number
-  description?: string
-  type: PlanItemType
-  excludeType: ExcludeType
   categoryId: string
-  minimumPercentage?: number
+  type: PlanItemType
+  name: string
+  amount: string | number
+  description?: string
+  excludeType: ExcludeType
+  isDailyBased: boolean
+  minimumPercentage?: string | number
   createdAt: string
   updatedAt: string
+  spentAmount: number
+  savedAmount: number
+  averageDaily: number
 }

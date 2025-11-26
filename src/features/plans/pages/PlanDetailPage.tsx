@@ -4,6 +4,7 @@ import { Button } from "@components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Badge } from "@components/ui/badge"
 import { Skeleton } from "@components/ui/skeleton"
+import { Progress } from "@components/ui/progress"
 import { 
   ArrowLeft, 
   Edit, 
@@ -13,11 +14,15 @@ import {
   Plus,
   TrendingUp,
   TrendingDown,
+  Wallet,
+  PiggyBank,
+  Calendar,
 } from "lucide-react"
 import { PageHeader } from "@components/molecules"
 import { PlanTypeBadge } from "../components/plan-status-badge"
 import { PlanFormModal } from "../components/plan-form-modal"
 import { PlanItemFormModal } from "../components/plan-item-form-modal"
+import { DailyTransactionsDrawer } from "../components/daily-transactions-drawer"
 import {
   useGetPlanByIdQuery,
   useUpdatePlanMutation,
@@ -52,6 +57,8 @@ export const PlanDetailPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isItemModalOpen, setIsItemModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<PlanItem | null>(null)
+  const [isTransactionsDrawerOpen, setIsTransactionsDrawerOpen] = useState(false)
+  const [selectedItemForTransactions, setSelectedItemForTransactions] = useState<PlanItem | null>(null)
 
   const planItems = planItemsResponse?.planItems || []
   const categories = categoriesResponse?.categories || []
@@ -114,6 +121,11 @@ export const PlanDetailPage = () => {
       console.error("Failed to delete plan item", error)
       showError("Failed to delete plan item. Please try again.")
     }
+  }
+
+  const handleViewTransactions = (item: PlanItem) => {
+    setSelectedItemForTransactions(item)
+    setIsTransactionsDrawerOpen(true)
   }
 
   const handleItemSubmit = async (data: PlanItemFormData) => {
@@ -342,84 +354,163 @@ export const PlanDetailPage = () => {
             <div className="space-y-3">
               {planItems.map((item) => {
                 const category = categories.find((c) => c.id === item.categoryId)
+                const totalAmount = typeof item.amount === "string" ? parseFloat(item.amount) : item.amount
+                const spentPercentage = totalAmount > 0 ? (item.spentAmount / totalAmount) * 100 : 0
+                const savedPercentage = totalAmount > 0 ? (item.savedAmount / totalAmount) * 100 : 0
+                
                 return (
                   <Card
                     key={item.id}
-                    className="border border-border/60 hover:border-border transition-colors"
+                    className="border border-border/60 hover:border-primary/50 transition-all cursor-pointer overflow-hidden"
+                    onClick={() => handleViewTransactions(item)}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        {/* Left: Icon and Details */}
-                        <div className="flex items-start gap-3 flex-1">
-                          {category?.Icon && (
-                            <div className="text-sm font-medium text-muted-foreground mt-1">
-                              {category.Icon}
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-semibold text-base truncate">{item.name}</h4>
-                              {item.type === "INCOME" ? (
-                                <Badge className="bg-green-500/10 text-green-700 border-green-200 shrink-0">
-                                  <TrendingUp className="h-3 w-3 mr-1" />
-                                  Income
-                                </Badge>
-                              ) : (
-                                <Badge className="bg-red-500/10 text-red-700 border-red-200 shrink-0">
-                                  <TrendingDown className="h-3 w-3 mr-1" />
-                                  Expense
-                                </Badge>
-                              )}
-                            </div>
-                            
-                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mb-2">
-                              {category && (
-                                <Badge variant="outline">
-                                  {category.name}
-                                </Badge>
-                              )}
-                              <Badge variant="outline">
-                                {item.excludeType}
-                              </Badge>
-                              {item.minimumPercentage !== undefined && (
-                                <Badge variant="outline">
-                                  Min: {item.minimumPercentage}%
-                                </Badge>
-                              )}
-                            </div>
-
-                            {item.description && (
-                              <p className="text-sm text-muted-foreground line-clamp-2">
-                                {item.description}
-                              </p>
+                    <CardContent className="p-0">
+                      {/* Header Section */}
+                      <div className="p-4 pb-3 border-b border-border/40">
+                        <div className="flex items-start justify-between gap-4">
+                          {/* Left: Icon and Details */}
+                          <div className="flex items-start gap-3 flex-1">
+                            {category?.Icon && (
+                              <div className="text-sm font-medium text-muted-foreground mt-1 shrink-0">
+                                {category.Icon}
+                              </div>
                             )}
-                          </div>
-                        </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h4 className="font-semibold text-base truncate">{item.name}</h4>
+                                {item.type === "INCOME" ? (
+                                  <Badge className="bg-green-500/10 text-green-700 border-green-200 shrink-0">
+                                    <TrendingUp className="h-3 w-3 mr-1" />
+                                    Income
+                                  </Badge>
+                                ) : (
+                                  <Badge className="bg-red-500/10 text-red-700 border-red-200 shrink-0">
+                                    <TrendingDown className="h-3 w-3 mr-1" />
+                                    Expense
+                                  </Badge>
+                                )}
+                              </div>
+                              
+                              <div className="flex flex-wrap items-center gap-2 text-sm mb-2">
+                                {category && (
+                                  <Badge variant="outline" className="text-xs">
+                                    {category.name}
+                                  </Badge>
+                                )}
+                                <Badge variant="outline" className="text-xs">
+                                  {item.excludeType}
+                                </Badge>
+                                {item.isDailyBased && (
+                                  <Badge variant="outline" className="text-xs">
+                                    Daily Based
+                                  </Badge>
+                                )}
+                                {item.minimumPercentage !== undefined && (
+                                  <Badge variant="outline" className="text-xs">
+                                    Min: {item.minimumPercentage}%
+                                  </Badge>
+                                )}
+                              </div>
 
-                        {/* Right: Amount and Actions */}
-                        <div className="flex items-start gap-3 shrink-0">
-                          <div className="text-right">
-                            <p className="font-bold text-lg">
-                              {formatCurrency(item.amount, plan.currency)}
-                            </p>
+                              {item.description && (
+                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                  {item.description}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex gap-1">
+
+                          {/* Right: Actions */}
+                          <div className="flex gap-1 shrink-0">
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleEditItem(item)}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleEditItem(item)
+                              }}
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleDeleteItem(item)}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDeleteItem(item)
+                              }}
                             >
                               <Trash2 className="h-4 w-4 text-destructive" />
                             </Button>
                           </div>
                         </div>
+                      </div>
+
+                      {/* Stats Section */}
+                      <div className="p-4 bg-muted/20">
+                        <div className="grid grid-cols-3 gap-4 mb-3">
+                          {/* Budget */}
+                          <div className="flex items-center gap-2">
+                            <Wallet className="h-4 w-4 text-primary" />
+                            <div>
+                              <p className="text-xs text-muted-foreground">Budget</p>
+                              <p className="font-bold text-sm">
+                                {formatCurrency(totalAmount, plan.currency)}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Spent */}
+                          <div className="flex items-center gap-2">
+                            <TrendingDown className="h-4 w-4 text-red-500" />
+                            <div>
+                              <p className="text-xs text-muted-foreground">Spent</p>
+                              <p className="font-bold text-sm text-red-600">
+                                {formatCurrency(item.spentAmount, plan.currency)}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Saved */}
+                          <div className="flex items-center gap-2">
+                            <PiggyBank className="h-4 w-4 text-green-500" />
+                            <div>
+                              <p className="text-xs text-muted-foreground">Saved</p>
+                              <p className="font-bold text-sm text-green-600">
+                                {formatCurrency(item.savedAmount, plan.currency)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">
+                              Spent: {spentPercentage.toFixed(1)}%
+                            </span>
+                            <span className="text-muted-foreground">
+                              Saved: {savedPercentage.toFixed(1)}%
+                            </span>
+                          </div>
+                          <Progress 
+                            value={spentPercentage} 
+                            className="h-2"
+                          />
+                        </div>
+
+                        {/* Average Daily */}
+                        {item.averageDaily > 0 && (
+                          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/40">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            <div className="flex-1">
+                              <p className="text-xs text-muted-foreground">Average Daily Spending</p>
+                              <p className="font-semibold text-sm">
+                                {formatCurrency(item.averageDaily, plan.currency)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -447,6 +538,15 @@ export const PlanDetailPage = () => {
         onOpenChange={setIsItemModalOpen}
         onSubmit={handleItemSubmit}
         isSubmitting={isCreatingItem || isUpdatingItem}
+      />
+
+      {/* Daily Transactions Drawer */}
+      <DailyTransactionsDrawer
+        open={isTransactionsDrawerOpen}
+        onOpenChange={setIsTransactionsDrawerOpen}
+        planId={id!}
+        planItem={selectedItemForTransactions}
+        currency={plan?.currency || "VND"}
       />
     </div>
   )
