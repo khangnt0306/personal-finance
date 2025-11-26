@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm, type Resolver, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -12,46 +12,38 @@ import {
   FormLabel,
   FormMessage,
 } from "@components/ui/form"
-import { AuthShell } from "../components/AuthShell"
-import { loginSchema, type LoginFormValues } from "../validation/auth.schemas"
-import { useAuth } from "@app/router/guards/AuthProvider"
-import { authService } from "@features/auth/services/auth.service"
+import { AuthShell } from "../../components/AuthShell"
+import { loginSchema, type LoginFormValues } from "@features/auth/validation"
+import { useLoginMutation } from "@features/auth/api"
+import { useAppDispatch, useAppSelector } from "@store/hooks"
+import { 
+  handleLoginSubmit, 
+  handleAuthenticatedRedirect, 
+  loadRememberedCredentials 
+} from "./LoginPage.handler"
 
 export const LoginPage = () => {
   const navigate = useNavigate()
-  const { login, isAuthenticated } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const dispatch = useAppDispatch()
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const [loginMutation, { isLoading }] = useLoginMutation()
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/", { replace: true })
-    }
+    handleAuthenticatedRedirect(isAuthenticated, navigate)
   }, [isAuthenticated, navigate])
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema) as Resolver<LoginFormValues>,
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: true,
-    },
+    defaultValues: loadRememberedCredentials(),
   })
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
-    try {
-      setIsSubmitting(true)
-      const response = await authService.login(values)
-      login({
-        token: response.token,
-        profile: response.user,
-      })
-      navigate("/", { replace: true })
-    } catch (error) {
-      console.error(error)
-      form.setError("root", { message: "Unable to sign in. Please try again." })
-    } finally {
-      setIsSubmitting(false)
-    }
+    await handleLoginSubmit(values, {
+      loginMutation: (credentials) => loginMutation(credentials).unwrap(),
+      dispatch,
+      navigate,
+      setError: form.setError,
+    })
   }
 
   return (
@@ -135,8 +127,8 @@ export const LoginPage = () => {
             </p>
           ) : null}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in…" : "Sign in"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing in…" : "Sign in"}
           </Button>
         </form>
       </Form>

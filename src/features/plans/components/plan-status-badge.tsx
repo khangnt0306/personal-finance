@@ -1,22 +1,22 @@
 import { Badge } from "@components/ui/badge"
-import type { PlanStatus } from "../types"
+import type { PlanType } from "../types"
 
-interface PlanStatusBadgeProps {
-  status: PlanStatus
+interface PlanTypeBadgeProps {
+  planType: PlanType
 }
 
-const STATUS_CONFIG: Record<
-  PlanStatus,
+const PLAN_TYPE_CONFIG: Record<
+  PlanType,
   { label: string; variant: "secondary" | "default" | "destructive" | "outline" }
 > = {
-  not_started: { label: "Not started", variant: "outline" },
-  in_progress: { label: "In progress", variant: "default" },
-  completed: { label: "Completed", variant: "secondary" },
-  on_hold: { label: "On hold", variant: "destructive" },
+  DAILY: { label: "Daily", variant: "default" },
+  WEEKLY: { label: "Weekly", variant: "default" },
+  MONTHLY: { label: "Monthly", variant: "secondary" },
+  YEARLY: { label: "Yearly", variant: "secondary" },
 }
 
-export const PlanStatusBadge = ({ status }: PlanStatusBadgeProps) => {
-  const config = STATUS_CONFIG[status]
+export const PlanTypeBadge = ({ planType }: PlanTypeBadgeProps) => {
+  const config = PLAN_TYPE_CONFIG[planType]
   return <Badge variant={config.variant}>{config.label}</Badge>
 }
 

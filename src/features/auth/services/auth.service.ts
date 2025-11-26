@@ -1,44 +1,11 @@
-const TOKEN_STORAGE_KEY = "pf_auth_token"
+
+
+export const TOKEN_STORAGE_KEY = "pf_auth_token"
+export const USER_STORAGE_KEY = "pf_auth_user"
+export const REMEMBER_EMAIL_KEY = "fink-email"
+export const REMEMBER_PASSWORD_KEY = "fink-password"
 const isBrowser = typeof window !== "undefined"
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-interface LoginRequest {
-  email: string
-  password: string
-  remember?: boolean
-}
-
-interface LoginResponse {
-  token: string
-  user: {
-    name: string
-    email: string
-    avatar?: string
-  }
-}
-
-const mockUserProfiles = [
-  {
-    name: "Jordan Wells",
-    email: "jordan.wells@example.com",
-    avatar: "https://api.dicebear.com/9.x/micah/svg?seed=Jordan%20Wells",
-  },
-  {
-    name: "Avery Chen",
-    email: "avery.chen@example.com",
-    avatar: "https://api.dicebear.com/9.x/micah/svg?seed=Avery%20Chen",
-  },
-]
-
-const getMockUserByEmail = (email: string) => {
-  const normalized = email.trim().toLowerCase()
-  return mockUserProfiles.find((user) => user.email === normalized) ?? {
-    ...mockUserProfiles[0],
-    email: normalized,
-    name: normalized.split("@")[0] || mockUserProfiles[0].name,
-  }
-}
 
 export const authService = {
   TOKEN_STORAGE_KEY,
@@ -58,26 +25,51 @@ export const authService = {
     localStorage.removeItem(TOKEN_STORAGE_KEY)
   },
 
-  async login(payload: LoginRequest): Promise<LoginResponse> {
-    await delay(600)
-
-    if (!payload.email || !payload.password) {
-      throw new Error("Email and password are required")
-    }
-
-    // Mocked credential check; replace with real API call when available.
-    if (payload.password.length < 4) {
-      throw new Error("Invalid email or password")
-    }
-
-    const user = getMockUserByEmail(payload.email)
-
-    return {
-      token: `mock-token-${crypto.randomUUID()}`,
-      user,
+  // Remember Me functionality
+  saveRememberedCredentials: (email: string, password: string) => {
+    if (!isBrowser) return
+    try {
+      // Encode để bảo mật cơ bản (không phải encryption thực sự)
+      const encodedEmail = btoa(email)
+      const encodedPassword = btoa(password)
+      localStorage.setItem(REMEMBER_EMAIL_KEY, encodedEmail)
+      localStorage.setItem(REMEMBER_PASSWORD_KEY, encodedPassword)
+    } catch (error) {
+      console.error("Failed to save remembered credentials:", error)
     }
   },
-}
 
-export type { LoginRequest, LoginResponse }
+  getRememberedCredentials: (): { email: string; password: string } | null => {
+    if (!isBrowser) return null
+    try {
+      const encodedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY)
+      const encodedPassword = localStorage.getItem(REMEMBER_PASSWORD_KEY)
+
+      if (!encodedEmail || !encodedPassword) return null
+
+      return {
+        email: atob(encodedEmail),
+        password: atob(encodedPassword),
+      }
+    } catch (error) {
+      console.error("Failed to get remembered credentials:", error)
+      return null
+    }
+  },
+
+  clearRememberedCredentials: () => {
+    if (!isBrowser) return
+    localStorage.removeItem(REMEMBER_EMAIL_KEY)
+    localStorage.removeItem(REMEMBER_PASSWORD_KEY)
+  },
+
+  hasRememberedCredentials: (): boolean => {
+    if (!isBrowser) return false
+    return Boolean(
+      localStorage.getItem(REMEMBER_EMAIL_KEY) && 
+      localStorage.getItem(REMEMBER_PASSWORD_KEY)
+    )
+  },
+
+}
 

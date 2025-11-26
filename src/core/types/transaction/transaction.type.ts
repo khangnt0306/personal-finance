@@ -1,5 +1,5 @@
 
-export type TransactionType = "income" | "expense"
+export type TransactionType = "INCOME" | "EXPENSE"
 
 export interface Transaction {
     id: string

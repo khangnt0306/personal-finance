@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react"
-import { useAuth, type UserRole } from "./AuthProvider"
+import { useAppSelector } from "@store/hooks"
+import { UserRole } from "@store/slices/auth/auth.props"
 
 interface RoleContextValue {
   role: UserRole
@@ -9,7 +10,7 @@ interface RoleContextValue {
 const RoleContext = createContext<RoleContextValue | undefined>(undefined)
 
 export const RoleProvider = ({ children }: { children: ReactNode }) => {
-  const { role } = useAuth()
+  const role = useAppSelector((state) => state.auth.role)
 
   const value = useMemo<RoleContextValue>(
     () => ({

@@ -1,17 +1,40 @@
-export type PlanStatus = "not_started" | "in_progress" | "completed" | "on_hold"
-export type PlanPriority = "low" | "medium" | "high"
+export type PlanType = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY"
+export type Currency = "VND" | "USD" | "EUR"
+export type PlanStatus = "ACTIVE" | "INACTIVE"
+export type PlanItemType = "INCOME" | "EXPENSE"
+export type ExcludeType = "FIXED" | "FLEXIBLE"
 
 export interface Plan {
   id: string
   name: string
   description?: string
-  targetAmount: number
-  currentAmount: number
-  startDate: string
-  endDate: string
+  currency: Currency
+  planType: PlanType
+  autoRepeat: boolean
+  autoAdjustEnabled: boolean
+  dailyMinLimit: number
+  warnLevelYellow: number
+  warnLevelRed: number
+  totalBudget: number
   status: PlanStatus
-  priority: PlanPriority
+  dailyMinLimitValue: number
+  warnLevelYellowValue: number
+  warnLevelRedValue: number
+  items: PlanItem[]
   createdAt: string
   updatedAt: string
 }
 
+export interface PlanItem {
+  id: string
+  planId: string
+  name: string
+  amount: number
+  description?: string
+  type: PlanItemType
+  excludeType: ExcludeType
+  categoryId: string
+  minimumPercentage?: number
+  createdAt: string
+  updatedAt: string
+}

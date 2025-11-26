@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const transactionSchema = z.object({
-  type: z.enum(["income", "expense"]),
+  type: z.enum(["INCOME", "EXPENSE"]),
   amount: z.number().positive("Amount must be greater than 0"),
   categoryId: z.string().min(1, "Category is required"),
   description: z.string().min(1, "Description is required"),
@@ -10,9 +10,10 @@ export const transactionSchema = z.object({
 
 export const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
-  type: z.enum(["income", "expense"]),
-  icon: z.string().optional(),
-  color: z.string().optional(),
+  description: z.string().optional(),
+  status: z.enum(["ACTIVE", "INACTIVE"]),
+  type: z.enum(["INCOME", "EXPENSE"]),
+  Icon: z.string().optional(),
 })
 
 export const budgetSchema = z.object({

@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,19 +12,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@components/ui/form"
-import { AuthShell } from "../components/AuthShell"
-import { registerSchema, type RegisterFormValues } from "../validation/auth.schemas"
-import { useAuth } from "@app/router/guards/AuthProvider"
+import { AuthShell } from "../../components/AuthShell"
+import { registerSchema, type RegisterFormValues } from "../../validation/auth.schemas"
+import { useRegisterMutation } from "../../api/auth.api"
+import { handleRegisterSubmit } from "./RegisterPage.handler"
 
 export const RegisterPage = () => {
   const navigate = useNavigate()
-  const { login } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [registerMutation, { isLoading }] = useRegisterMutation()
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      full_name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -33,17 +32,11 @@ export const RegisterPage = () => {
   })
 
   const onSubmit = async (values: RegisterFormValues) => {
-    try {
-      setIsSubmitting(true)
-      await new Promise((resolve) => setTimeout(resolve, 700))
-      login("user", { name: values.name, email: values.email })
-      navigate("/", { replace: true })
-    } catch (error) {
-      console.error(error)
-      form.setError("root", { message: "Account creation failed. Try again." })
-    } finally {
-      setIsSubmitting(false)
-    }
+    await handleRegisterSubmit(values, {
+      registerMutation: (credentials) => registerMutation(credentials).unwrap(),
+      navigate,
+      setError: form.setError,
+    })
   }
 
   return (
@@ -70,7 +63,7 @@ export const RegisterPage = () => {
           <div className="grid gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name="full_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full name</FormLabel>
@@ -129,8 +122,8 @@ export const RegisterPage = () => {
             </p>
           ) : null}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account…" : "Create account"}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Creating account…" : "Create account"}
           </Button>
         </form>
       </Form>

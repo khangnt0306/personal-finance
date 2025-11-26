@@ -21,6 +21,7 @@ import { Input } from "@components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
 import { Textarea } from "@components/ui/textarea"
 import { Button } from "@components/ui/button"
+import { Switch } from "@components/ui/switch"
 import type { Plan } from "../types"
 import { planSchema, type PlanFormData } from "../validation/plan.schemas"
 
@@ -32,17 +33,17 @@ interface PlanFormModalProps {
   isSubmitting?: boolean
 }
 
-const STATUS_OPTIONS = [
-  { value: "not_started", label: "Not started" },
-  { value: "in_progress", label: "In progress" },
-  { value: "completed", label: "Completed" },
-  { value: "on_hold", label: "On hold" },
+const CURRENCY_OPTIONS = [
+  { value: "VND", label: "VND (₫)" },
+  { value: "USD", label: "USD ($)" },
+  { value: "EUR", label: "EUR (€)" },
 ] as const
 
-const PRIORITY_OPTIONS = [
-  { value: "low", label: "Low" },
-  { value: "medium", label: "Medium" },
-  { value: "high", label: "High" },
+const PLAN_TYPE_OPTIONS = [
+  { value: "DAILY", label: "Daily" },
+  { value: "WEEKLY", label: "Weekly" },
+  { value: "MONTHLY", label: "Monthly" },
+  { value: "YEARLY", label: "Yearly" },
 ] as const
 
 export const PlanFormModal = ({
@@ -57,12 +58,13 @@ export const PlanFormModal = ({
     defaultValues: {
       name: "",
       description: "",
-      targetAmount: 0,
-      currentAmount: 0,
-      startDate: new Date().toISOString().split("T")[0],
-      endDate: new Date().toISOString().split("T")[0],
-      status: "not_started",
-      priority: "medium",
+      currency: "VND",
+      planType: "MONTHLY",
+      autoRepeat: false,
+      autoAdjustEnabled: true,
+      dailyMinLimit: 10,
+      warnLevelYellow: 50,
+      warnLevelRed: 80,
     },
   })
 
@@ -71,23 +73,25 @@ export const PlanFormModal = ({
       form.reset({
         name: plan.name,
         description: plan.description || "",
-        targetAmount: plan.targetAmount,
-        currentAmount: plan.currentAmount,
-        startDate: plan.startDate.split("T")[0],
-        endDate: plan.endDate.split("T")[0],
-        status: plan.status,
-        priority: plan.priority,
+        currency: plan.currency,
+        planType: plan.planType,
+        autoRepeat: plan.autoRepeat,
+        autoAdjustEnabled: plan.autoAdjustEnabled,
+        dailyMinLimit: plan.dailyMinLimit,
+        warnLevelYellow: plan.warnLevelYellow,
+        warnLevelRed: plan.warnLevelRed,
       })
     } else {
       form.reset({
         name: "",
         description: "",
-        targetAmount: 0,
-        currentAmount: 0,
-        startDate: new Date().toISOString().split("T")[0],
-        endDate: new Date().toISOString().split("T")[0],
-        status: "not_started",
-        priority: "medium",
+        currency: "VND",
+        planType: "MONTHLY",
+        autoRepeat: false,
+        autoAdjustEnabled: true,
+        dailyMinLimit: 10,
+        warnLevelYellow: 50,
+        warnLevelRed: 80,
       })
     }
   }, [plan, form])
@@ -138,86 +142,18 @@ export const PlanFormModal = ({
             <div className="grid gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
-                name="targetAmount"
+                name="currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Target amount</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="10000"
-                        value={field.value}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="currentAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Current amount</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        value={field.value}
-                        onChange={(event) => field.onChange(Number(event.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel>Currency</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
+                          <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {STATUS_OPTIONS.map((option) => (
+                        {CURRENCY_OPTIONS.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>
@@ -230,18 +166,18 @@ export const PlanFormModal = ({
               />
               <FormField
                 control={form.control}
-                name="priority"
+                name="planType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Priority</FormLabel>
+                    <FormLabel>Plan type</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select priority" />
+                          <SelectValue placeholder="Select plan type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {PRIORITY_OPTIONS.map((option) => (
+                        {PLAN_TYPE_OPTIONS.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>
@@ -249,6 +185,109 @@ export const PlanFormModal = ({
                       </SelectContent>
                     </Select>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="dailyMinLimit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Daily minimum limit (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="0" max="100"
+                      placeholder="10%"
+                      value={field.value}
+                      onChange={(event) => field.onChange(Number(event.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="warnLevelYellow"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Yellow warning level (%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="50"
+                        value={field.value}
+                        onChange={(event) => field.onChange(Number(event.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="warnLevelRed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Red warning level (%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="80"
+                        value={field.value}
+                        onChange={(event) => field.onChange(Number(event.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="autoRepeat"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/60 bg-muted/30 p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Auto-repeat</FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Automatically repeat this plan when completed
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="autoAdjustEnabled"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/60 bg-muted/30 p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Auto-adjust enabled</FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Automatically adjust plan based on spending patterns
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

@@ -1,7 +1,7 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@lib/utils"
-import { fadeSlide, withStagger } from "@styles"
+import { fadeSlide, withStagger } from "../../../styles"
 import type { StatGroupProps } from "./stat-group.props"
 
 export const StatGroup = ({ items, columns = 3, className }: StatGroupProps) => {

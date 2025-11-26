@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom"
 import type { ReactElement } from "react"
-import { useAuth } from "./AuthProvider"
+import { useAppSelector } from "@store/hooks"
 
 interface ProtectedRouteProps {
   children: ReactElement
@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, redirectTo = "/unauthorized" }: ProtectedRouteProps) => {
-  const { isAuthenticated } = useAuth()
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
   const location = useLocation()
 
   if (!isAuthenticated) {

@@ -1,69 +1,54 @@
 import { useMemo, useState } from "react"
 import { Button } from "@components/ui/button"
-import { Plus, AlertCircle, Calendar } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
+import { Plus } from "lucide-react"
 import { DataToolbar, PageHeader } from "@components/molecules"
 import { PlanList } from "../components/plan-list"
 import { PlanFormModal } from "../components/plan-form-modal"
 import {
   useCreatePlanMutation,
   useDeletePlanMutation,
-  useGetPlansQuery,
+  useGetSelfPlansQuery,
   useUpdatePlanMutation,
 } from "../api/plan.api"
-import type { Plan, PlanPriority, PlanStatus } from "../types"
+import type { Plan, PlanType } from "../types"
 import type { PlanFormData } from "../validation/plan.schemas"
 import { Skeleton } from "@components/ui/skeleton"
-import { Alert, AlertDescription, AlertTitle } from "@components/ui/alert"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip"
-import { DatePicker } from "@components/ui/date-picker"
-import { parseISO, isAfter, isBefore } from "date-fns"
 
 export const PlansPage = () => {
-  const { data, isLoading, isFetching, refetch } = useGetPlansQuery({})
-  const plans = useMemo(() => data?.data ?? [], [data])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [planTypeFilter, setPlanTypeFilter] = useState<PlanType | "all">("all")
+  
+  const { data, isLoading, isFetching, refetch } = useGetSelfPlansQuery({
+    textSearch: searchTerm || undefined,
+    filter: {
+      planType: planTypeFilter !== "all" ? planTypeFilter : undefined,
+    },
+    limit: 100,
+  })
+  
+  const plans = useMemo(() => data?.plans ?? [], [data])
   const [createPlan, { isLoading: isCreating }] = useCreatePlanMutation()
   const [updatePlan, { isLoading: isUpdating }] = useUpdatePlanMutation()
   const [deletePlan] = useDeletePlanMutation()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusView, setStatusView] = useState<PlanStatus | "all">("all")
-  const [priorityFilter, setPriorityFilter] = useState<PlanPriority | "all">("all")
 
-  const filteredPlans = useMemo(() => {
-    return plans.filter((plan) => {
-      const matchesSearch =
-        !searchTerm ||
-        plan.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        plan.description?.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesStatus = statusView === "all" || plan.status === statusView
-      const matchesPriority = priorityFilter === "all" || plan.priority === priorityFilter
-      return matchesSearch && matchesStatus && matchesPriority
-    })
-  }, [plans, searchTerm, statusView, priorityFilter])
+  const filteredPlans = plans
 
   const stats = useMemo(() => {
-    const completed = plans.filter((plan) => plan.status === "completed").length
-    const inProgress = plans.filter((plan) => plan.status === "in_progress").length
-    const onHold = plans.filter((plan) => plan.status === "on_hold").length
+    const withAutoRepeat = plans.filter((plan: Plan) => plan.autoRepeat).length
+    const withAutoAdjust = plans.filter((plan: Plan) => plan.autoAdjustEnabled).length
+    const monthly = plans.filter((plan: Plan) => plan.planType === "MONTHLY").length
+    const yearly = plans.filter((plan: Plan) => plan.planType === "YEARLY").length
     return {
       total: plans.length,
-      completed,
-      inProgress,
-      onHold,
+      withAutoRepeat,
+      withAutoAdjust,
+      monthly,
+      yearly,
     }
-  }, [plans])
-
-  const upcomingDeadlines = useMemo(() => {
-    const now = new Date()
-    const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
-    return plans.filter((plan) => {
-      if (!plan.deadline || plan.status === "completed") return false
-      const deadline = parseISO(plan.deadline)
-      return isAfter(deadline, now) && isBefore(deadline, nextWeek)
-    })
   }, [plans])
 
   const handleOpenModal = (plan?: Plan | null) => {
@@ -126,22 +111,13 @@ export const PlansPage = () => {
             </Tooltip>
           }
           highlights={[
-            { label: "Total plans", value: stats.total.toString() },
-            { label: "In progress", value: stats.inProgress.toString(), helper: "active" },
-            { label: "Completed", value: stats.completed.toString(), helper: "celebrated wins" },
-            { label: "On hold", value: stats.onHold.toString(), helper: "paused" },
+            { label: "Total plans", value: (data?.pagination?.total ?? 0).toString() },
+            { label: "Auto-repeat", value: stats.withAutoRepeat.toString(), helper: "repeating" },
+            { label: "Auto-adjust", value: stats.withAutoAdjust.toString(), helper: "adaptive" },
+            { label: "Monthly", value: stats.monthly.toString(), helper: "per month" },
           ]}
         />
 
-        {upcomingDeadlines.length > 0 && (
-          <Alert variant="warning">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Upcoming Deadlines</AlertTitle>
-            <AlertDescription>
-              {upcomingDeadlines.length} plan{upcomingDeadlines.length > 1 ? "s" : ""} {upcomingDeadlines.length > 1 ? "have" : "has"} deadlines in the next 7 days
-            </AlertDescription>
-          </Alert>
-        )}
 
       <DataToolbar
         searchValue={searchTerm}
@@ -149,37 +125,20 @@ export const PlansPage = () => {
         searchPlaceholder="Search plans by name or description"
         viewOptions={[
           { label: "All", value: "all" },
-          { label: "Active", value: "in_progress" },
-          { label: "Not started", value: "not_started" },
-          { label: "Completed", value: "completed" },
-          { label: "On hold", value: "on_hold" },
+          { label: "Daily", value: "DAILY" },
+          { label: "Weekly", value: "WEEKLY" },
+          { label: "Monthly", value: "MONTHLY" },
+          { label: "Yearly", value: "YEARLY" },
         ]}
-        currentView={statusView}
-        onViewChange={(value) => setStatusView(value as PlanStatus | "all")}
-        filters={
-          <Select
-            value={priorityFilter}
-            onValueChange={(value) => setPriorityFilter(value as PlanPriority | "all")}
-          >
-            <SelectTrigger className="w-full min-w-[180px] sm:w-[180px]">
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All priorities</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
-            </SelectContent>
-          </Select>
-        }
+        currentView={planTypeFilter}
+        onViewChange={(value) => setPlanTypeFilter(value as PlanType | "all")}
         actions={
           <Button
             variant="ghost"
             className="w-full sm:w-auto"
             onClick={() => {
               setSearchTerm("")
-              setStatusView("all")
-              setPriorityFilter("all")
+              setPlanTypeFilter("all")
             }}
           >
             Reset

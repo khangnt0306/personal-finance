@@ -2,14 +2,14 @@ import type { EndpointBuilder, EndpointDefinitions } from "@reduxjs/toolkit/quer
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { buildQueryParams } from "@utils/queryBuilder"
 import type { QueryParams } from "@utils/queryBuilder"
+import { authService } from "@features/auth/services/auth.service"
 
 const apiTags = ["Transaction", "Category", "Budget", "Transactions", "Plan"] as const
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE || "/api",
-  prepareHeaders: (headers, { getState }) => {
-    const state = getState() as { auth?: { token?: string } }
-    const token = state.auth?.token
+  prepareHeaders: (headers) => {
+    const token = authService.getToken()
     if (token) headers.set("Authorization", `Bearer ${token}`)
     return headers
   },

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react"
-import { Outlet, Link, useLocation } from "react-router-dom"
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@lib/utils"
-import { Wallet, TrendingUp, PieChart, Settings, Home, List, Menu, X } from "lucide-react"
+import { Wallet, TrendingUp, PieChart, Settings, Home, List, Menu, X, LogOut } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { MotionContainer } from "@components/ui/motion-primitives"
 import { drawerTransition, overlayTransition } from "../styles/motion"  
-import { useAuth } from "@app/router/guards/AuthProvider"
+import { useAppDispatch, useAppSelector } from "@store/hooks"
+import { logout } from "@store/slices/auth/auth.slice"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
@@ -29,7 +30,9 @@ const getInitials = (name: string) =>
 
 export const DashboardLayout = () => {
   const location = useLocation()
-  const { user } = useAuth()
+  const navigate = useNavigate()
+  const user = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch()
   const [isDesktop, setIsDesktop] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -96,19 +99,20 @@ export const DashboardLayout = () => {
         <Link to="/accounts" className="mt-6 flex items-center gap-3 rounded-2xl border border-border/60 bg-white/60 p-3 shadow-soft hover:shadow-sky-200 transition-all duration-200 ">
           {user.avatar ? (
             <span className="relative inline-flex h-12 w-12 overflow-hidden rounded-2xl border border-white/30 bg-primary/10">
-              <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+              <img src={user.avatar} alt={user.full_name} className="h-full w-full object-cover" />
             </span>
           ) : (
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-base font-semibold text-primary">
-              {getInitials(user.name)}
+              {getInitials(user.full_name)}
             </span>
           )}
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-foreground">{user.name}</p>
+            <p className="truncate text-sm font-semibold text-foreground">{user.full_name}</p>
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
         </Link>
-        <nav className="mt-10 flex flex-1 flex-col gap-2">
+        <nav className="mt-10 flex flex-1 flex-col gap-2 justify-between">
+          <div>
           {navigation.map((item) => {
             const isActive =
               item.href === "/"
@@ -142,6 +146,20 @@ export const DashboardLayout = () => {
               </Link>
             )
           })}
+          </div>
+          <div className="mt-10">
+            <Button 
+              variant="ghost" 
+              className="w-full rounded-2xl border border-border/60 bg-white/70 shadow-soft"
+              onClick={() => {
+                dispatch(logout())
+                navigate("/auth/login")
+              }}
+            >
+              <LogOut className="h-5 w-5" />
+              Logout
+            </Button>
+          </div>
         </nav>
       </motion.aside>
 
