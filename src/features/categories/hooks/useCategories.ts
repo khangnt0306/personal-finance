@@ -29,7 +29,7 @@ export const useCategories = () => {
   }
 }
 
-export const useCategoriesByType = (type: "income" | "expense") => {
+export const useCategoriesByType = (type: "INCOME" | "EXPENSE") => {
   const { categories, loading, refetch } = useCategories()
   const filtered = categories.filter((cat) => cat.type === type)
 

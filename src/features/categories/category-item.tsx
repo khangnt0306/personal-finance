@@ -23,16 +23,16 @@ export const CategoryItem = ({
       )}
     >
       <div className="flex items-center gap-3">
-        {category.icon && (
-          <span className="text-2xl">{category.icon}</span>
+        {category.Icon && (
+          <span className="text-2xl">{category.Icon}</span>
         )}
         <div>
           <p className="font-medium">{category.name}</p>
           <Badge
-            variant={category.type === "income" ? "default" : "secondary"}
+            variant={category.type === "INCOME" ? "default" : "secondary"}
             className="mt-1"
           >
-            {category.type}
+            {category.type === "INCOME" ? "Thu nhập" : "Chi tiêu"}
           </Badge>
         </div>
       </div>

@@ -9,10 +9,10 @@ const PLAN_TYPE_CONFIG: Record<
   PlanType,
   { label: string; variant: "secondary" | "default" | "destructive" | "outline" }
 > = {
-  DAILY: { label: "Daily", variant: "default" },
-  WEEKLY: { label: "Weekly", variant: "default" },
-  MONTHLY: { label: "Monthly", variant: "secondary" },
-  YEARLY: { label: "Yearly", variant: "secondary" },
+  DAILY: { label: "Hàng ngày", variant: "default" },
+  WEEKLY: { label: "Hàng tuần", variant: "default" },
+  MONTHLY: { label: "Hàng tháng", variant: "secondary" },
+  YEARLY: { label: "Hàng năm", variant: "secondary" },
 }
 
 export const PlanTypeBadge = ({ planType }: PlanTypeBadgeProps) => {

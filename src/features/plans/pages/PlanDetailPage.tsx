@@ -36,7 +36,7 @@ import {
 } from "../api/plan-item.api"
 import type { PlanFormData } from "../validation/plan.schemas"
 import type { PlanItemFormData } from "../validation/plan.schemas"
-import type { PlanItem } from "../types"
+import type { PlanItem, ExcludeType } from "../types"
 import { format } from "date-fns"
 import { showSuccess, showError } from "@lib/toast"
 import { useGetSelfCategoriesQuery } from "@features/categories"
@@ -62,6 +62,14 @@ export const PlanDetailPage = () => {
 
   const planItems = planItemsResponse?.planItems || []
   const categories = categoriesResponse?.categories || []
+  const planStatusLabel: Record<string, string> = {
+    ACTIVE: "Đang hoạt động",
+    INACTIVE: "Không hoạt động",
+  }
+  const excludeTypeLabel: Record<ExcludeType, string> = {
+    FIXED: "Cố định",
+    FLEXIBLE: "Linh hoạt",
+  }
 
   const handleBack = () => {
     navigate("/plans")
@@ -73,16 +81,16 @@ export const PlanDetailPage = () => {
 
   const handleDelete = async () => {
     if (!plan) return
-    const confirmed = window.confirm(`Delete plan "${plan.name}"?`)
+    const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa kế hoạch "${plan.name}"?`)
     if (!confirmed) return
     
     try {
       await deletePlan(plan.id).unwrap()
-      showSuccess("Plan deleted successfully!")
+      showSuccess("Xóa kế hoạch thành công!")
       navigate("/plans")
     } catch (error) {
-      console.error("Failed to delete plan", error)
-      showError("Failed to delete plan. Please try again.")
+      console.error("Xóa kế hoạch thất bại", error)
+      showError("Không thể xóa kế hoạch. Vui lòng thử lại.")
     }
   }
 
@@ -93,10 +101,10 @@ export const PlanDetailPage = () => {
       await updatePlan({ id: plan.id, data: { ...payload, id: plan.id } }).unwrap()
       await refetch()
       setIsEditModalOpen(false)
-      showSuccess("Plan updated successfully!")
+      showSuccess("Cập nhật kế hoạch thành công!")
     } catch (error) {
-      console.error("Failed to update plan", error)
-      showError("Failed to update plan. Please try again.")
+      console.error("Cập nhật kế hoạch thất bại", error)
+      showError("Không thể cập nhật kế hoạch. Vui lòng thử lại.")
     }
   }
 
@@ -111,15 +119,15 @@ export const PlanDetailPage = () => {
   }
 
   const handleDeleteItem = async (item: PlanItem) => {
-    const confirmed = window.confirm(`Delete item "${item.name}"?`)
+    const confirmed = window.confirm(`Bạn có chắc chắn muốn xóa hạng mục "${item.name}"?`)
     if (!confirmed) return
     
     try {
       await deletePlanItem({ planId: id!, itemId: item.id }).unwrap()
-      showSuccess("Plan item deleted successfully!")
+      showSuccess("Đã xóa hạng mục kế hoạch!")
     } catch (error) {
-      console.error("Failed to delete plan item", error)
-      showError("Failed to delete plan item. Please try again.")
+      console.error("Xóa hạng mục kế hoạch thất bại", error)
+      showError("Không thể xóa hạng mục. Vui lòng thử lại.")
     }
   }
 
@@ -136,19 +144,19 @@ export const PlanDetailPage = () => {
           itemId: editingItem.id,
           data,
         }).unwrap()
-        showSuccess("Plan item updated successfully!")
+        showSuccess("Đã cập nhật hạng mục kế hoạch!")
       } else {
         await createPlanItem({
           planId: id!,
           data,
         }).unwrap()
-        showSuccess("Plan item created successfully!")
+        showSuccess("Tạo hạng mục kế hoạch thành công!")
       }
       setIsItemModalOpen(false)
       setEditingItem(null)
     } catch (error) {
-      console.error("Failed to save plan item", error)
-      showError("Failed to save plan item. Please try again.")
+      console.error("Lưu hạng mục kế hoạch thất bại", error)
+      showError("Không thể lưu hạng mục. Vui lòng thử lại.")
     }
   }
 
@@ -166,10 +174,10 @@ export const PlanDetailPage = () => {
       <div className="space-y-8">
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
-            <p className="text-lg text-muted-foreground">Plan not found</p>
+            <p className="text-lg text-muted-foreground">Không tìm thấy kế hoạch</p>
             <Button onClick={handleBack} variant="outline" className="mt-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Plans
+              Quay lại danh sách
             </Button>
           </CardContent>
         </Card>
@@ -181,25 +189,25 @@ export const PlanDetailPage = () => {
     <div className="space-y-8">
       <PageHeader
         title={plan.name}
-        description={plan.description || "Financial plan details"}
+        description={plan.description || "Chi tiết kế hoạch tài chính"}
         breadcrumbs={[
-          { label: "Dashboard", href: "/" },
-          { label: "Plans", href: "/plans" },
+          { label: "Bảng điều khiển", href: "/" },
+          { label: "Kế hoạch", href: "/plans" },
           { label: plan.name },
         ]}
         actions={
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleBack}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
+              Quay lại
             </Button>
             <Button variant="outline" onClick={handleEdit}>
               <Edit className="mr-2 h-4 w-4" />
-              Edit
+              Chỉnh sửa
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              Xóa
             </Button>
           </div>
         }
@@ -208,18 +216,18 @@ export const PlanDetailPage = () => {
       {/* Timeline Card - Moved to top */}
       <Card>
         <CardHeader>
-          <CardTitle>Timeline</CardTitle>
-          <CardDescription>Creation and update history</CardDescription>
+          <CardTitle>Dòng thời gian</CardTitle>
+          <CardDescription>Lịch sử tạo & cập nhật</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Created</span>
+            <span className="text-sm text-muted-foreground">Ngày tạo</span>
             <span className="text-sm font-medium">
               {format(new Date(plan.createdAt), "PPP 'at' p")}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Last Updated</span>
+            <span className="text-sm text-muted-foreground">Cập nhật lần cuối</span>
             <span className="text-sm font-medium">
               {format(new Date(plan.updatedAt), "PPP 'at' p")}
             </span>
@@ -232,26 +240,26 @@ export const PlanDetailPage = () => {
         {/* Plan Info Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Plan Information</CardTitle>
-            <CardDescription>Basic details about this plan</CardDescription>
+            <CardTitle>Thông tin kế hoạch</CardTitle>
+            <CardDescription>Thông tin cơ bản</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Currency</span>
+              <span className="text-sm text-muted-foreground">Tiền tệ</span>
               <Badge variant="outline">{plan.currency}</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Plan Type</span>
+              <span className="text-sm text-muted-foreground">Loại kế hoạch</span>
               <PlanTypeBadge planType={plan.planType} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Status</span>
+              <span className="text-sm text-muted-foreground">Trạng thái</span>
               <Badge variant={plan.status === "ACTIVE" ? "default" : "outline"}>
-                {plan.status}
+                {planStatusLabel[plan.status] ?? plan.status}
               </Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Total Budget</span>
+              <span className="text-sm text-muted-foreground">Ngân sách tổng</span>
               <span className="font-semibold">{formatCurrency(plan.totalBudget, plan.currency)}</span>
             </div>
           </CardContent>
@@ -260,12 +268,12 @@ export const PlanDetailPage = () => {
         {/* Automation Settings Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Automation</CardTitle>
-            <CardDescription>Automated behaviors</CardDescription>
+            <CardTitle>Tự động hóa</CardTitle>
+            <CardDescription>Hành vi tự động</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Auto Repeat</span>
+              <span className="text-sm text-muted-foreground">Tự lặp</span>
               {plan.autoRepeat ? (
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
               ) : (
@@ -273,7 +281,7 @@ export const PlanDetailPage = () => {
               )}
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Auto Adjust</span>
+              <span className="text-sm text-muted-foreground">Tự điều chỉnh</span>
               {plan.autoAdjustEnabled ? (
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
               ) : (
@@ -286,12 +294,12 @@ export const PlanDetailPage = () => {
         {/* Limits & Warnings Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Limits & Warnings</CardTitle>
-            <CardDescription>Budget thresholds</CardDescription>
+            <CardTitle>Giới hạn & cảnh báo</CardTitle>
+            <CardDescription>Ngưỡng ngân sách</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Daily Min Limit</span>
+              <span className="text-sm text-muted-foreground">Giới hạn tối thiểu/ngày</span>
               <div className="flex items-center gap-2">
                 <span className="font-semibold">{plan.dailyMinLimit}%</span>
                 <span className="text-xs text-muted-foreground">
@@ -300,7 +308,7 @@ export const PlanDetailPage = () => {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Yellow Warning</span>
+              <span className="text-sm text-muted-foreground">Cảnh báo vàng</span>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
                   {plan.warnLevelYellow}%
@@ -311,7 +319,7 @@ export const PlanDetailPage = () => {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Red Warning</span>
+              <span className="text-sm text-muted-foreground">Cảnh báo đỏ</span>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-red-50 text-red-700 border-red-300">
                   {plan.warnLevelRed}%
@@ -329,18 +337,16 @@ export const PlanDetailPage = () => {
       <div className="flex justify-center">
         <Button onClick={handleCreateItem} size="lg" className="w-full max-w-md">
           <Plus className="mr-2 h-5 w-5" />
-          Create Plan Item
+          Tạo hạng mục kế hoạch
         </Button>
       </div>
 
       {/* Plan Items Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Plan Items</CardTitle>
+          <CardTitle>Hạng mục kế hoạch</CardTitle>
           <CardDescription>
-            {isLoadingItems
-              ? "Loading items..."
-              : `${planItems.length} item${planItems.length !== 1 ? "s" : ""} in this plan`}
+            {isLoadingItems ? "Đang tải hạng mục..." : `${planItems.length} hạng mục trong kế hoạch này`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -381,12 +387,12 @@ export const PlanDetailPage = () => {
                                 {item.type === "INCOME" ? (
                                   <Badge className="bg-green-500/10 text-green-700 border-green-200 shrink-0">
                                     <TrendingUp className="h-3 w-3 mr-1" />
-                                    Income
+                                    Thu nhập
                                   </Badge>
                                 ) : (
                                   <Badge className="bg-red-500/10 text-red-700 border-red-200 shrink-0">
                                     <TrendingDown className="h-3 w-3 mr-1" />
-                                    Expense
+                                    Chi tiêu
                                   </Badge>
                                 )}
                               </div>
@@ -398,16 +404,16 @@ export const PlanDetailPage = () => {
                                   </Badge>
                                 )}
                                 <Badge variant="outline" className="text-xs">
-                                  {item.excludeType}
+                                  {excludeTypeLabel[item.excludeType] ?? item.excludeType}
                                 </Badge>
                                 {item.isDailyBased && (
                                   <Badge variant="outline" className="text-xs">
-                                    Daily Based
+                                    Theo ngày
                                   </Badge>
                                 )}
                                 {item.minimumPercentage !== undefined && (
                                   <Badge variant="outline" className="text-xs">
-                                    Min: {item.minimumPercentage}%
+                                    Tối thiểu: {item.minimumPercentage}%
                                   </Badge>
                                 )}
                               </div>
@@ -453,7 +459,7 @@ export const PlanDetailPage = () => {
                           <div className="flex items-center gap-2">
                             <Wallet className="h-4 w-4 text-primary" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Budget</p>
+                              <p className="text-xs text-muted-foreground">Ngân sách</p>
                               <p className="font-bold text-sm">
                                 {formatCurrency(totalAmount, plan.currency)}
                               </p>
@@ -464,7 +470,7 @@ export const PlanDetailPage = () => {
                           <div className="flex items-center gap-2">
                             <TrendingDown className="h-4 w-4 text-red-500" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Spent</p>
+                              <p className="text-xs text-muted-foreground">Đã chi</p>
                               <p className="font-bold text-sm text-red-600">
                                 {formatCurrency(item.spentAmount, plan.currency)}
                               </p>
@@ -475,7 +481,7 @@ export const PlanDetailPage = () => {
                           <div className="flex items-center gap-2">
                             <PiggyBank className="h-4 w-4 text-green-500" />
                             <div>
-                              <p className="text-xs text-muted-foreground">Saved</p>
+                              <p className="text-xs text-muted-foreground">Đã tiết kiệm</p>
                               <p className="font-bold text-sm text-green-600">
                                 {formatCurrency(item.savedAmount, plan.currency)}
                               </p>
@@ -487,10 +493,10 @@ export const PlanDetailPage = () => {
                         <div className="space-y-2">
                           <div className="flex justify-between text-xs">
                             <span className="text-muted-foreground">
-                              Spent: {spentPercentage.toFixed(1)}%
+                              Đã chi: {spentPercentage.toFixed(1)}%
                             </span>
                             <span className="text-muted-foreground">
-                              Saved: {savedPercentage.toFixed(1)}%
+                              Tiết kiệm: {savedPercentage.toFixed(1)}%
                             </span>
                           </div>
                           <Progress 
@@ -504,7 +510,7 @@ export const PlanDetailPage = () => {
                           <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/40">
                             <Calendar className="h-4 w-4 text-muted-foreground" />
                             <div className="flex-1">
-                              <p className="text-xs text-muted-foreground">Average Daily Spending</p>
+                              <p className="text-xs text-muted-foreground">Chi tiêu trung bình/ngày</p>
                               <p className="font-semibold text-sm">
                                 {formatCurrency(item.averageDaily, plan.currency)}
                               </p>

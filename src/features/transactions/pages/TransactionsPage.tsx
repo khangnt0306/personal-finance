@@ -71,8 +71,8 @@ export const TransactionsPage = () => {
     return filtered
   }, [transactions, searchTerm, dateFilter, selectedCategories])
 
-  const incomeTransactions = filteredTransactions.filter((t) => t.type === "income")
-  const expenseTransactions = filteredTransactions.filter((t) => t.type === "expense")
+  const incomeTransactions = filteredTransactions.filter((t) => t.type === "INCOME")
+  const expenseTransactions = filteredTransactions.filter((t) => t.type === "EXPENSE")
 
   const handleCreate = (data: TransactionFormData) => {
     transactionService.create(data)
@@ -123,59 +123,59 @@ export const TransactionsPage = () => {
     <TooltipProvider>
       <div className="space-y-8">
         <PageHeader
-          title="Transactions"
-          description="Manage money in and out with search, filters, and delightful motion."
-          breadcrumbs={[{ label: "Dashboard" }, { label: "Transactions" }]}
+          title="Giao dịch"
+          description="Quản lý dòng tiền vào ra với tìm kiếm, bộ lọc và hiệu ứng mượt mà."
+          breadcrumbs={[{ label: "Bảng điều khiển" }, { label: "Giao dịch" }]}
           actions={
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button size="lg" onClick={() => setIsModalOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Add transaction
+                  Thêm giao dịch
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Create a new income or expense transaction</p>
+                <p>Tạo giao dịch thu hoặc chi mới</p>
               </TooltipContent>
             </Tooltip>
           }
           highlights={[
-            { label: "Records", value: transactions.length.toString() },
-            { label: "Income", value: incomeTransactions.length.toString(), helper: "matching filter" },
-            { label: "Expense", value: expenseTransactions.length.toString(), helper: "matching filter" },
+            { label: "Tổng dòng", value: transactions.length.toString() },
+            { label: "Thu", value: incomeTransactions.length.toString(), helper: "đúng bộ lọc" },
+            { label: "Chi", value: expenseTransactions.length.toString(), helper: "đúng bộ lọc" },
           ]}
         />
 
         <DataToolbar
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
-          searchPlaceholder="Search by description or category"
+          searchPlaceholder="Tìm theo mô tả hoặc danh mục"
           actions={
             <div className="flex items-center gap-3">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full sm:w-auto">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateFilter ? dateFilter.toLocaleDateString() : "Select month"}
+                    {dateFilter ? dateFilter.toLocaleDateString() : "Chọn tháng"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <DatePicker
                     date={dateFilter}
                     onDateChange={setDateFilter}
-                    placeholder="Select month"
+                    placeholder="Chọn tháng"
                   />
                 </PopoverContent>
               </Popover>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full sm:w-auto">
-                    Categories ({selectedCategories.length})
+                    Danh mục ({selectedCategories.length})
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-4" align="start">
                   <div className="space-y-2">
-                    <Label>Filter by categories</Label>
+                    <Label>Lọc theo danh mục</Label>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto">
                       {categories.map((category) => (
                         <div key={category.id} className="flex items-center space-x-2">
@@ -200,7 +200,7 @@ export const TransactionsPage = () => {
                         className="w-full mt-2"
                         onClick={() => setSelectedCategories([])}
                       >
-                        Clear filters
+                        Xóa bộ lọc
                       </Button>
                     )}
                   </div>
@@ -215,7 +215,7 @@ export const TransactionsPage = () => {
                 }}
                 disabled={!searchTerm && !dateFilter && selectedCategories.length === 0}
               >
-                Clear all
+                Xóa tất cả
               </Button>
             </div>
           }
@@ -231,19 +231,19 @@ export const TransactionsPage = () => {
           ) : (
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="mb-6 bg-white/60">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="income">Income</TabsTrigger>
-                <TabsTrigger value="expense">Expense</TabsTrigger>
+                <TabsTrigger value="all">Tất cả</TabsTrigger>
+                <TabsTrigger value="income">Thu</TabsTrigger>
+                <TabsTrigger value="expense">Chi</TabsTrigger>
               </TabsList>
               <TabsContent value="all">
                 {filteredTransactions.length ? (
                   <TransactionList transactions={filteredTransactions} onEdit={handleEdit} onDelete={handleDeleteClick} />
                 ) : (
                   <EmptyState
-                    title="No transactions match"
-                    description="Adjust your filters or add a new transaction to get started."
+                    title="Không có giao dịch phù hợp"
+                    description="Điều chỉnh bộ lọc hoặc thêm giao dịch mới để bắt đầu."
                     action={{
-                      label: "Add transaction",
+                      label: "Thêm giao dịch",
                       onClick: () => setIsModalOpen(true),
                     }}
                   />
@@ -254,10 +254,10 @@ export const TransactionsPage = () => {
                   <TransactionList transactions={incomeTransactions} onEdit={handleEdit} onDelete={handleDeleteClick} />
                 ) : (
                   <EmptyState
-                    title="No income found"
-                    description="No income transactions matched the filter."
+                    title="Chưa có khoản thu"
+                    description="Không có giao dịch thu nào khớp bộ lọc."
                     action={{
-                      label: "Add income",
+                      label: "Thêm khoản thu",
                       onClick: () => setIsModalOpen(true),
                       variant: "secondary",
                     }}
@@ -269,10 +269,10 @@ export const TransactionsPage = () => {
                   <TransactionList transactions={expenseTransactions} onEdit={handleEdit} onDelete={handleDeleteClick} />
                 ) : (
                   <EmptyState
-                    title="No expenses found"
-                    description="Log your expenses to keep budgets aligned."
+                    title="Chưa có khoản chi"
+                    description="Ghi lại chi tiêu để ngân sách luôn chính xác."
                     action={{
-                      label: "Add expense",
+                      label: "Thêm khoản chi",
                       onClick: () => setIsModalOpen(true),
                       variant: "secondary",
                     }}
@@ -286,14 +286,14 @@ export const TransactionsPage = () => {
         <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogTitle>Bạn chắc chắn?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the transaction from your records.
+                Thao tác này không thể hoàn tác và sẽ xóa vĩnh viễn giao dịch khỏi dữ liệu của bạn.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+              <AlertDialogCancel>Hủy</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteConfirm}>Xóa</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

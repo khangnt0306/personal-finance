@@ -9,34 +9,34 @@ export const GoalContributionModal = () => {
   const [note, setNote] = useState("Payroll sweep")
 
   const handleSubmit = () => {
-    // eslint-disable-next-line no-console
+     
     console.log({ amount, note })
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">Add contribution</Button>
+        <Button className="w-full">Thêm khoản đóng góp</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Boost emergency reserve</DialogTitle>
-          <DialogDescription>Funds move instantly from your high-yield account.</DialogDescription>
+          <DialogTitle>Tăng quỹ dự phòng khẩn cấp</DialogTitle>
+          <DialogDescription>Tiền sẽ được chuyển ngay lập tức từ tài khoản lãi cao.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <label className="space-y-2 text-sm">
-            <span className="text-muted-foreground">Amount</span>
+            <span className="text-muted-foreground">Số tiền</span>
             <Input value={amount} onChange={(event) => setAmount(event.target.value)} />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="text-muted-foreground">Note</span>
+            <span className="text-muted-foreground">Ghi chú</span>
             <Textarea rows={3} value={note} onChange={(event) => setNote(event.target.value)} />
           </label>
         </div>
         <DialogFooter>
-          <Button variant="secondary">Cancel</Button>
+          <Button variant="secondary">Hủy</Button>
           <Button onClick={handleSubmit} className="gap-2">
-            Commit transfer
+            Thực hiện chuyển tiền
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,20 +1,20 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 
 const categories = [
-  { name: "Housing", amount: 2450, percent: 32, color: "from-orange-500/70" },
-  { name: "Groceries", amount: 860, percent: 11, color: "from-emerald-500/70" },
-  { name: "Dining", amount: 640, percent: 8, color: "from-violet-500/70" },
-  { name: "Transportation", amount: 410, percent: 5, color: "from-cyan-500/70" },
-  { name: "Lifestyle", amount: 970, percent: 13, color: "from-pink-500/70" },
-  { name: "Investments", amount: 1800, percent: 24, color: "from-amber-500/70" },
+  { name: "Nhà ở", amount: 2450, percent: 32, color: "from-orange-500/70" },
+  { name: "Thực phẩm", amount: 860, percent: 11, color: "from-emerald-500/70" },
+  { name: "Ăn uống", amount: 640, percent: 8, color: "from-violet-500/70" },
+  { name: "Di chuyển", amount: 410, percent: 5, color: "from-cyan-500/70" },
+  { name: "Phong cách sống", amount: 970, percent: 13, color: "from-pink-500/70" },
+  { name: "Đầu tư", amount: 1800, percent: 24, color: "from-amber-500/70" },
 ]
 
 export const SpendingByCategoryChart = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Spending by category</CardTitle>
-        <CardDescription>Trailing 60 days</CardDescription>
+        <CardTitle className="text-2xl">Chi tiêu theo danh mục</CardTitle>
+        <CardDescription>60 ngày gần nhất</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {categories.map((category) => (

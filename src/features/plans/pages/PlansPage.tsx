@@ -75,18 +75,18 @@ export const PlansPage = () => {
       await refetch()
       handleCloseModal()
     } catch (error) {
-      console.error("Failed to save plan", error)
+      console.error("Lưu kế hoạch thất bại", error)
     }
   }
 
   const handleDelete = async (plan: Plan) => {
-    const confirmed = window.confirm(`Delete plan "${plan.name}"?`)
+    const confirmed = window.confirm(`Xóa kế hoạch "${plan.name}"?`)
     if (!confirmed) return
     try {
       await deletePlan(plan.id).unwrap()
       await refetch()
     } catch (error) {
-      console.error("Failed to delete plan", error)
+      console.error("Xóa kế hoạch thất bại", error)
     }
   }
 
@@ -94,27 +94,27 @@ export const PlansPage = () => {
     <TooltipProvider>
       <div className="space-y-8">
         <PageHeader
-          title="Plans"
-          description="Organize long-term goals, monitor progress, and celebrate milestones with clarity."
-          breadcrumbs={[{ label: "Dashboard" }, { label: "Plans" }]}
+          title="Kế hoạch"
+          description="Sắp xếp mục tiêu dài hạn, theo dõi tiến độ và ăn mừng từng cột mốc một cách rõ ràng."
+          breadcrumbs={[{ label: "Bảng điều khiển" }, { label: "Kế hoạch" }]}
           actions={
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button size="lg" onClick={() => handleOpenModal()}>
                   <Plus className="mr-2 h-4 w-4" />
-                  New plan
+                  Kế hoạch mới
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Create a new financial plan or goal</p>
+                <p>Tạo kế hoạch hay mục tiêu tài chính mới</p>
               </TooltipContent>
             </Tooltip>
           }
           highlights={[
-            { label: "Total plans", value: (data?.pagination?.total ?? 0).toString() },
-            { label: "Auto-repeat", value: stats.withAutoRepeat.toString(), helper: "repeating" },
-            { label: "Auto-adjust", value: stats.withAutoAdjust.toString(), helper: "adaptive" },
-            { label: "Monthly", value: stats.monthly.toString(), helper: "per month" },
+            { label: "Tổng kế hoạch", value: (data?.pagination?.total ?? 0).toString() },
+            { label: "Tự lặp", value: stats.withAutoRepeat.toString(), helper: "đang kích hoạt" },
+            { label: "Tự điều chỉnh", value: stats.withAutoAdjust.toString(), helper: "linh hoạt" },
+            { label: "Hàng tháng", value: stats.monthly.toString(), helper: "theo tháng" },
           ]}
         />
 
@@ -122,13 +122,13 @@ export const PlansPage = () => {
       <DataToolbar
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Search plans by name or description"
+        searchPlaceholder="Tìm kế hoạch theo tên hoặc mô tả"
         viewOptions={[
-          { label: "All", value: "all" },
-          { label: "Daily", value: "DAILY" },
-          { label: "Weekly", value: "WEEKLY" },
-          { label: "Monthly", value: "MONTHLY" },
-          { label: "Yearly", value: "YEARLY" },
+          { label: "Tất cả", value: "all" },
+          { label: "Hàng ngày", value: "DAILY" },
+          { label: "Hàng tuần", value: "WEEKLY" },
+          { label: "Hàng tháng", value: "MONTHLY" },
+          { label: "Hàng năm", value: "YEARLY" },
         ]}
         currentView={planTypeFilter}
         onViewChange={(value) => setPlanTypeFilter(value as PlanType | "all")}
@@ -141,7 +141,7 @@ export const PlansPage = () => {
               setPlanTypeFilter("all")
             }}
           >
-            Reset
+            Đặt lại
           </Button>
         }
       />

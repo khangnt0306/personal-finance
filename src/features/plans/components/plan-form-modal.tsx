@@ -40,10 +40,10 @@ const CURRENCY_OPTIONS = [
 ] as const
 
 const PLAN_TYPE_OPTIONS = [
-  { value: "DAILY", label: "Daily" },
-  { value: "WEEKLY", label: "Weekly" },
-  { value: "MONTHLY", label: "Monthly" },
-  { value: "YEARLY", label: "Yearly" },
+  { value: "DAILY", label: "Hàng ngày" },
+  { value: "WEEKLY", label: "Hàng tuần" },
+  { value: "MONTHLY", label: "Hàng tháng" },
+  { value: "YEARLY", label: "Hàng năm" },
 ] as const
 
 export const PlanFormModal = ({
@@ -104,11 +104,11 @@ export const PlanFormModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{plan ? "Update plan" : "Create plan"}</DialogTitle>
+          <DialogTitle>{plan ? "Cập nhật kế hoạch" : "Tạo kế hoạch"}</DialogTitle>
           <DialogDescription>
             {plan
-              ? "Edit the plan details and milestones"
-              : "Define your financial plan and desired outcomes"}
+              ? "Chỉnh sửa nội dung và các mốc của kế hoạch"
+              : "Định nghĩa kế hoạch tài chính và kết quả mong muốn"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -118,9 +118,9 @@ export const PlanFormModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Tên kế hoạch</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter plan name" {...field} />
+                    <Input placeholder="Nhập tên kế hoạch" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,9 +131,9 @@ export const PlanFormModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Mô tả</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe your plan" {...field} />
+                    <Textarea placeholder="Mô tả ngắn gọn kế hoạch của bạn" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -145,11 +145,11 @@ export const PlanFormModal = ({
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Currency</FormLabel>
+                    <FormLabel>Tiền tệ</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select currency" />
+                          <SelectValue placeholder="Chọn tiền tệ" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -169,11 +169,11 @@ export const PlanFormModal = ({
                 name="planType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Plan type</FormLabel>
+                    <FormLabel>Loại kế hoạch</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select plan type" />
+                          <SelectValue placeholder="Chọn loại kế hoạch" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -194,7 +194,7 @@ export const PlanFormModal = ({
               name="dailyMinLimit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Daily minimum limit (%)</FormLabel>
+                  <FormLabel>Giới hạn tối thiểu mỗi ngày (%)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -214,7 +214,7 @@ export const PlanFormModal = ({
                 name="warnLevelYellow"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Yellow warning level (%)</FormLabel>
+                    <FormLabel>Ngưỡng cảnh báo vàng (%)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -234,7 +234,7 @@ export const PlanFormModal = ({
                 name="warnLevelRed"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Red warning level (%)</FormLabel>
+                    <FormLabel>Ngưỡng cảnh báo đỏ (%)</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -257,9 +257,9 @@ export const PlanFormModal = ({
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/60 bg-muted/30 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">Auto-repeat</FormLabel>
+                      <FormLabel className="text-base">Tự lặp lại</FormLabel>
                       <p className="text-sm text-muted-foreground">
-                        Automatically repeat this plan when completed
+                        Tự động kích hoạt lại kế hoạch khi hoàn thành
                       </p>
                     </div>
                     <FormControl>
@@ -277,9 +277,9 @@ export const PlanFormModal = ({
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-2xl border border-border/60 bg-muted/30 p-4">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">Auto-adjust enabled</FormLabel>
+                      <FormLabel className="text-base">Bật tự điều chỉnh</FormLabel>
                       <p className="text-sm text-muted-foreground">
-                        Automatically adjust plan based on spending patterns
+                        Tự động điều chỉnh dựa trên thói quen chi tiêu
                       </p>
                     </div>
                     <FormControl>
@@ -294,10 +294,10 @@ export const PlanFormModal = ({
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                Hủy
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : plan ? "Update" : "Create"}
+                {isSubmitting ? "Đang lưu..." : plan ? "Cập nhật" : "Tạo mới"}
               </Button>
             </DialogFooter>
           </form>

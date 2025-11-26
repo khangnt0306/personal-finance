@@ -48,7 +48,7 @@ export const TransactionFormModal = ({
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      type: transaction?.type || "expense",
+      type: transaction?.type || "EXPENSE",
       amount: transaction?.amount || 0,
       categoryId: transaction?.categoryId || "",
       description: transaction?.description || "",
@@ -84,12 +84,12 @@ export const TransactionFormModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {transaction ? "Edit Transaction" : "Create Transaction"}
+            {transaction ? "Chỉnh sửa giao dịch" : "Tạo giao dịch"}
           </DialogTitle>
           <DialogDescription>
             {transaction
-              ? "Update transaction information"
-              : "Add a new transaction"}
+              ? "Cập nhật thông tin giao dịch"
+              : "Thêm một giao dịch mới"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -99,19 +99,19 @@ export const TransactionFormModal = ({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>Loại giao dịch</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder="Chọn loại" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="income">Income</SelectItem>
-                      <SelectItem value="expense">Expense</SelectItem>
+                      <SelectItem value="INCOME">Thu</SelectItem>
+                      <SelectItem value="EXPENSE">Chi</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -123,20 +123,20 @@ export const TransactionFormModal = ({
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Danh mục</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="Chọn danh mục" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {filteredCategories.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
-                          {category.icon} {category.name}
+                          {category.Icon} {category.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -150,9 +150,9 @@ export const TransactionFormModal = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Mô tả</FormLabel>
                   <FormControl>
-                    <Input placeholder="Transaction description" {...field} />
+                    <Input placeholder="Nội dung giao dịch" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -163,7 +163,7 @@ export const TransactionFormModal = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>Số tiền</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -181,7 +181,7 @@ export const TransactionFormModal = ({
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date</FormLabel>
+                  <FormLabel>Ngày</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -195,10 +195,10 @@ export const TransactionFormModal = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type="submit">
-                {transaction ? "Update" : "Create"}
+                {transaction ? "Cập nhật" : "Tạo mới"}
               </Button>
             </DialogFooter>
           </form>

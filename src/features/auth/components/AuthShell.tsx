@@ -16,9 +16,9 @@ export const AuthShell = ({
   description,
   eyebrow = "Aurora Finance",
   highlights = [
-    "Bank-grade encryption on every sync",
-    "Plan, save, and invest in one place",
-    "Mobile-first insights for busy teams",
+    "Mã hoá tiêu chuẩn ngân hàng trong mọi lần đồng bộ",
+    "Lập kế hoạch, tiết kiệm và đầu tư tại một nơi",
+    "Ưu tiên di động cho đội nhóm bận rộn",
   ],
   children,
   footer,

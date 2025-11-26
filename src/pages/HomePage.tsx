@@ -38,11 +38,11 @@ export const HomePage = () => {
     })
 
     const totalIncome = monthTransactions
-      .filter((t) => t.type === "income")
+      .filter((t) => t.type === "INCOME")
       .reduce((sum, t) => sum + t.amount, 0)
 
     const totalExpense = monthTransactions
-      .filter((t) => t.type === "expense")
+      .filter((t) => t.type === "EXPENSE")
       .reduce((sum, t) => sum + t.amount, 0)
 
     return {
@@ -89,53 +89,53 @@ export const HomePage = () => {
       .map<TimelineItem>((transaction) => ({
         id: transaction.id,
         title: transaction.description,
-        description: `${transaction.type === "income" ? "+" : "-"}${formatCurrency(transaction.amount)} • ${
+        description: `${transaction.type === "INCOME" ? "+" : "-"}${formatCurrency(transaction.amount)} • ${
           transaction.categoryId
         }`,
         timestamp: formatDistanceToNow(parseISO(transaction.date), { addSuffix: true }),
-        status: transaction.type === "income" ? "success" : "warning",
-        icon: transaction.type === "income" ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />,
+        status: transaction.type === "INCOME" ? "success" : "warning",
+        icon: transaction.type === "INCOME" ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />,
       }))
   }, [transactions])
 
   const stats = [
     {
       id: "income",
-      label: "Monthly income",
+      label: "Thu nhập tháng",
       value: formatCurrency(summary.totalIncome),
-      helper: "vs previous balance",
+      helper: "so với số dư trước",
       delta: summary.totalIncome ? (summary.balance / (summary.totalIncome || 1)) * 100 : 0,
       icon: <TrendingUp className="h-5 w-5" />,
-      tooltip: "Total income received this month from all sources",
+      tooltip: "Tổng thu nhập tháng này từ mọi nguồn",
     },
     {
       id: "expense",
-      label: "Monthly expense",
+      label: "Chi tiêu tháng",
       value: formatCurrency(summary.totalExpense),
-      helper: "spend footprint",
+      helper: "dấu chi tiêu",
       delta: summary.totalExpense
         ? (-summary.balance / (summary.totalExpense || 1)) * 100
         : undefined,
       icon: <TrendingDown className="h-5 w-5" />,
-      tooltip: "Total expenses incurred this month across all categories",
+      tooltip: "Tổng chi phí tháng này trên mọi danh mục",
     },
     {
       id: "balance",
-      label: "Current balance",
+      label: "Số dư hiện tại",
       value: formatCurrency(summary.balance),
-      helper: "available to allocate",
+      helper: "có thể phân bổ",
       delta: summary.balance ? (summary.balance / (summary.totalIncome || 1)) * 100 : undefined,
       icon: <Wallet className="h-5 w-5" />,
-      tooltip: "Net balance after subtracting expenses from income",
+      tooltip: "Số dư ròng sau khi trừ chi phí khỏi thu nhập",
     },
     {
       id: "transactions",
-      label: "Transactions",
+      label: "Giao dịch",
       value: summary.transactionCount.toString(),
-      helper: "this month",
+      helper: "trong tháng",
       delta: summary.transactionCount,
       icon: <Activity className="h-5 w-5" />,
-      tooltip: "Total number of transactions recorded this month",
+      tooltip: "Tổng số giao dịch ghi nhận trong tháng",
     },
   ]
 
@@ -143,33 +143,33 @@ export const HomePage = () => {
     <TooltipProvider>
       <div className="space-y-10">
         <PageHeader
-          title="Financial overview"
-          description="Track income, expenses, and real-time activity across your personal finance workspace."
-          breadcrumbs={[{ label: "Dashboard" }, { label: "Overview" }]}
+          title="Tổng quan tài chính"
+          description="Theo dõi thu nhập, chi tiêu và hoạt động theo thời gian thực trong không gian quản lý tài chính của bạn."
+          breadcrumbs={[{ label: "Bảng điều khiển" }, { label: "Tổng quan" }]}
           actions={
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <DatePicker
                 date={dateFilter}
                 onDateChange={setDateFilter}
-                placeholder="Select month"
+                placeholder="Chọn tháng"
                 className="w-full"
               />
               <Button size="lg" onClick={() => navigate("/transactions")} className="w-full sm:w-auto">
-                Review transactions <ArrowRight className="ml-2 h-4 w-4" />
+                Xem giao dịch <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           }
           highlights={[
-            { label: "Monthly income", value: formatCurrency(summary.totalIncome) },
-            { label: "Monthly expense", value: formatCurrency(summary.totalExpense) },
-            { label: "Balance", value: formatCurrency(summary.balance) },
+            { label: "Thu nhập tháng", value: formatCurrency(summary.totalIncome) },
+            { label: "Chi tiêu tháng", value: formatCurrency(summary.totalExpense) },
+            { label: "Số dư", value: formatCurrency(summary.balance) },
           ]}
         />
 
         {budgetWarnings.length > 0 && (
           <Alert variant={budgetWarnings.some((w) => w.severity === "destructive") ? "destructive" : "warning"}>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Budget Alerts</AlertTitle>
+            <AlertTitle>Cảnh báo ngân sách</AlertTitle>
             <AlertDescription>
               {budgetWarnings.length === 1 ? (
                 budgetWarnings[0].message
@@ -239,25 +239,24 @@ export const HomePage = () => {
           <MotionCard className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Net balance</p>
+                <p className="text-sm text-muted-foreground">Số dư ròng</p>
                 <p className="mt-1 text-4xl font-semibold">{formatCurrency(summary.balance)}</p>
               </div>
               <div className="text-right text-sm text-muted-foreground">
-                <p>Income: {formatCurrency(summary.totalIncome)}</p>
-                <p>Expense: {formatCurrency(summary.totalExpense)}</p>
+                <p>Thu: {formatCurrency(summary.totalIncome)}</p>
+                <p>Chi: {formatCurrency(summary.totalExpense)}</p>
               </div>
             </div>
             <p className="mt-6 text-sm text-muted-foreground">
-              Real-time view of how your earnings stack against spending so you can adjust budgets
-              early.
+              Góc nhìn theo thời gian thực về việc thu nhập của bạn so với chi tiêu để kịp thời điều chỉnh ngân sách.
             </p>
           </MotionCard>
 
           <MotionCard className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Recent activity</p>
-                <p className="mt-1 text-2xl font-semibold">Latest transactions</p>
+                <p className="text-sm text-muted-foreground">Hoạt động gần đây</p>
+                <p className="mt-1 text-2xl font-semibold">Giao dịch mới nhất</p>
               </div>
             </div>
             <div className="mt-6">
@@ -265,10 +264,10 @@ export const HomePage = () => {
                 <ActivityTimeline items={recentActivity} />
               ) : (
                 <EmptyState
-                  title="No activity yet"
-                  description="Create your first transaction to populate the activity feed."
+                  title="Chưa có hoạt động"
+                  description="Tạo giao dịch đầu tiên để bắt đầu lấp đầy dòng hoạt động."
                   action={{
-                    label: "Add transaction",
+                    label: "Thêm giao dịch",
                     onClick: () => navigate("/transactions"),
                     variant: "secondary",
                   }}
@@ -284,26 +283,26 @@ export const HomePage = () => {
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
                   <Info className="h-4 w-4 text-primary" />
-                  <span>Financial Tips & Best Practices</span>
+                    <span>Mẹo tài chính & thực hành tốt</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4 text-sm text-muted-foreground">
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Track Regularly</p>
-                    <p>Review your transactions weekly to catch any discrepancies early and maintain accurate records.</p>
+                      <p className="font-semibold text-foreground mb-1">Theo dõi thường xuyên</p>
+                      <p>Kiểm tra giao dịch mỗi tuần để phát hiện sai lệch sớm và giữ dữ liệu chính xác.</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Set Realistic Budgets</p>
-                    <p>Create budgets based on your actual spending patterns, not ideal scenarios. Adjust as needed.</p>
+                      <p className="font-semibold text-foreground mb-1">Đặt ngân sách thực tế</p>
+                      <p>Lập ngân sách dựa trên thói quen chi tiêu thực tế, không phải kỳ vọng. Điều chỉnh khi cần.</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Emergency Fund</p>
-                    <p>Maintain at least 3-6 months of expenses in an emergency fund for unexpected situations.</p>
+                      <p className="font-semibold text-foreground mb-1">Quỹ khẩn cấp</p>
+                      <p>Duy trì quỹ khẩn cấp tương đương 3-6 tháng chi phí để phòng tình huống bất ngờ.</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Review Monthly</p>
-                    <p>At the end of each month, review your spending patterns and adjust budgets for the next month.</p>
+                      <p className="font-semibold text-foreground mb-1">Đánh giá mỗi tháng</p>
+                      <p>Cuối tháng, rà soát thói quen chi tiêu và điều chỉnh ngân sách cho tháng kế tiếp.</p>
                   </div>
                 </div>
               </AccordionContent>

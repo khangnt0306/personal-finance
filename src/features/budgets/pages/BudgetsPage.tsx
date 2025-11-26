@@ -70,7 +70,7 @@ export const BudgetsPage = () => {
   }
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this budget?")) {
+    if (confirm("Bạn có chắc chắn muốn xóa ngân sách này?")) {
       budgetService.delete(id)
       refetch()
     }
@@ -91,29 +91,29 @@ export const BudgetsPage = () => {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Budgets"
-        description="Set intentional spending limits and make adjustments before overspending occurs."
-        breadcrumbs={[{ label: "Dashboard" }, { label: "Budgets" }]}
+        title="Ngân sách"
+        description="Đặt giới hạn chi tiêu có chủ đích và điều chỉnh trước khi vượt mức."
+        breadcrumbs={[{ label: "Bảng điều khiển" }, { label: "Ngân sách" }]}
         actions={
           <Button size="lg" onClick={() => setIsModalOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Add budget
+            Thêm ngân sách
           </Button>
         }
         highlights={[
-          { label: "Total budgets", value: summary.total.toString() },
-          { label: "Monthly", value: summary.monthly.toString(), helper: "recurring" },
-          { label: "Yearly", value: summary.yearly.toString(), helper: "long-term" },
-          { label: "Target amount", value: formatCurrency(summary.target) },
+          { label: "Tổng ngân sách", value: summary.total.toString() },
+          { label: "Hàng tháng", value: summary.monthly.toString(), helper: "lặp lại" },
+          { label: "Hàng năm", value: summary.yearly.toString(), helper: "dài hạn" },
+          { label: "Tổng mục tiêu", value: formatCurrency(summary.target) },
         ]}
       />
 
       {budgetWarnings.length > 0 && (
         <Alert variant={budgetWarnings.some((b) => budgetService.getSpentAmount(b.id) > b.amount) ? "destructive" : "warning"}>
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Budget Alerts</AlertTitle>
+          <AlertTitle>Cảnh báo ngân sách</AlertTitle>
           <AlertDescription>
-            {budgetWarnings.length} budget{budgetWarnings.length > 1 ? "s" : ""} {budgetWarnings.some((b) => budgetService.getSpentAmount(b.id) > b.amount) ? "exceeded" : "approaching limit"}
+            Có {budgetWarnings.length} ngân sách {budgetWarnings.some((b) => budgetService.getSpentAmount(b.id) > b.amount) ? "đã vượt mức" : "đang chạm ngưỡng"}.
           </AlertDescription>
         </Alert>
       )}
@@ -128,9 +128,9 @@ export const BudgetsPage = () => {
         ) : budgets.length ? (
           <>
             <div className="mb-6 flex items-center justify-between">
-              <Label className="text-sm font-medium">Enable/Disable Budgets</Label>
+              <Label className="text-sm font-medium">Bật/tắt ngân sách</Label>
               <div className="text-sm text-muted-foreground">
-                {enabledBudgets.size} of {budgets.length} enabled
+                {enabledBudgets.size} / {budgets.length} đang bật
               </div>
             </div>
             <Accordion type="multiple" className="w-full">
@@ -169,18 +169,18 @@ export const BudgetsPage = () => {
                       <div className="space-y-4 pt-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label className="text-xs text-muted-foreground">Spent</Label>
+                            <Label className="text-xs text-muted-foreground">Đã chi</Label>
                             <p className="text-lg font-semibold">{formatCurrency(spent)}</p>
                           </div>
                           <div>
-                            <Label className="text-xs text-muted-foreground">Remaining</Label>
+                            <Label className="text-xs text-muted-foreground">Còn lại</Label>
                             <p className={`text-lg font-semibold ${remaining < 0 ? "text-destructive" : ""}`}>
                               {formatCurrency(Math.abs(remaining))}
                             </p>
                           </div>
                         </div>
                         <div>
-                          <Label className="text-xs text-muted-foreground mb-2 block">Adjust Budget Amount</Label>
+                          <Label className="text-xs text-muted-foreground mb-2 block">Điều chỉnh số tiền ngân sách</Label>
                           <Slider
                             value={[budget.amount]}
                             onValueChange={(value) => {
@@ -203,14 +203,14 @@ export const BudgetsPage = () => {
                             size="sm"
                             onClick={() => handleEdit(budget)}
                           >
-                            Edit Budget
+                            Chỉnh sửa
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDelete(budget.id)}
                           >
-                            Delete Budget
+                            Xóa
                           </Button>
                         </div>
                       </div>
@@ -225,10 +225,10 @@ export const BudgetsPage = () => {
           </>
         ) : (
           <EmptyState
-            title="No budgets yet"
-            description="Create budgets across categories to keep spending aligned."
+            title="Chưa có ngân sách"
+            description="Tạo ngân sách cho từng danh mục để kiểm soát chi tiêu."
             action={{
-              label: "Create budget",
+              label: "Tạo ngân sách",
               onClick: () => setIsModalOpen(true),
             }}
           />

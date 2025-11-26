@@ -16,7 +16,7 @@ export const TransactionList = ({
   if (transactions.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        No transactions found
+        Không tìm thấy giao dịch nào
       </div>
     )
   }

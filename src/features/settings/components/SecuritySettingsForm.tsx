@@ -31,7 +31,7 @@ export const SecuritySettingsForm = () => {
   })
 
   const onSubmit = (values: SecurityFormValues) => {
-    setStatus(`Security updated · MFA ${values.mfaEnabled ? "on" : "off"}`)
+    setStatus(`Đã cập nhật bảo mật · MFA ${values.mfaEnabled ? "bật" : "tắt"}`)
     form.reset({ ...values, currentPassword: "", newPassword: "", confirmPassword: "" })
   }
 
@@ -40,16 +40,16 @@ export const SecuritySettingsForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <h3 className="text-xl font-semibold text-white">Security controls</h3>
-            <p className="text-sm text-muted-foreground">Rotate passwords and manage MFA preferences.</p>
+            <h3 className="text-xl font-semibold text-white">Kiểm soát bảo mật</h3>
+            <p className="text-sm text-muted-foreground">Đổi mật khẩu định kỳ và quản lý xác thực đa yếu tố.</p>
           </div>
           <FormField
             control={form.control}
             name="currentPassword"
-            rules={{ required: "Required" }}
+            rules={{ required: "Bắt buộc" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Current password</FormLabel>
+                <FormLabel>Mật khẩu hiện tại</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
@@ -61,10 +61,10 @@ export const SecuritySettingsForm = () => {
             <FormField
               control={form.control}
               name="newPassword"
-              rules={{ required: "Required" }}
+              rules={{ required: "Bắt buộc" }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New password</FormLabel>
+                  <FormLabel>Mật khẩu mới</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -75,10 +75,10 @@ export const SecuritySettingsForm = () => {
             <FormField
               control={form.control}
               name="confirmPassword"
-              rules={{ required: "Required" }}
+              rules={{ required: "Bắt buộc" }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -87,14 +87,14 @@ export const SecuritySettingsForm = () => {
               )}
             />
           </div>
-          <FormField
+            <FormField
             control={form.control}
             name="mfaEnabled"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between rounded-2xl border border-border/60 bg-muted/10 px-4 py-3">
                 <div>
-                  <FormLabel>MFA</FormLabel>
-                  <p className="text-sm text-muted-foreground">Protect logins with Authenticator prompts.</p>
+                    <FormLabel>MFA</FormLabel>
+                    <p className="text-sm text-muted-foreground">Bảo vệ đăng nhập bằng ứng dụng xác thực.</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Switch
@@ -102,16 +102,16 @@ export const SecuritySettingsForm = () => {
                     onCheckedChange={field.onChange}
                   />
                   <span className="text-sm font-medium">
-                    {field.value ? "Enabled" : "Disabled"}
+                    {field.value ? "Đang bật" : "Đang tắt"}
                   </span>
                 </div>
               </FormItem>
             )}
           />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            {status ? <p className="text-sm text-primary">{status}</p> : <span className="text-sm text-muted-foreground">Last rotated 34 days ago</span>}
+            {status ? <p className="text-sm text-primary">{status}</p> : <span className="text-sm text-muted-foreground">Lần đổi gần nhất cách đây 34 ngày</span>}
             <Button type="submit" className="w-full sm:w-auto">
-              Update security
+              Cập nhật bảo mật
             </Button>
           </div>
         </form>

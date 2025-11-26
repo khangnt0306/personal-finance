@@ -44,7 +44,7 @@ export const BudgetFormModal = ({
   budget,
 }: BudgetFormModalProps) => {
   const { categories } = useCategories()
-  const expenseCategories = categories.filter((cat) => cat.type === "expense")
+  const expenseCategories = categories.filter((cat) => cat.type === "EXPENSE")
 
   const form = useForm<BudgetFormData>({
     resolver: zodResolver(budgetSchema),
@@ -80,12 +80,12 @@ export const BudgetFormModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {budget ? "Edit Budget" : "Create Budget"}
+            {budget ? "Chỉnh sửa ngân sách" : "Tạo ngân sách"}
           </DialogTitle>
           <DialogDescription>
             {budget
-              ? "Update budget information"
-              : "Set a budget limit for a category"}
+              ? "Cập nhật thông tin ngân sách"
+              : "Thiết lập giới hạn chi tiêu cho danh mục"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -95,14 +95,14 @@ export const BudgetFormModal = ({
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Danh mục</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="Chọn danh mục" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -122,7 +122,7 @@ export const BudgetFormModal = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>Số tiền</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -140,19 +140,19 @@ export const BudgetFormModal = ({
               name="period"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Period</FormLabel>
+                  <FormLabel>Chu kỳ</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select period" />
+                        <SelectValue placeholder="Chọn chu kỳ" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="yearly">Yearly</SelectItem>
+                      <SelectItem value="monthly">Hàng tháng</SelectItem>
+                      <SelectItem value="yearly">Hàng năm</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -164,7 +164,7 @@ export const BudgetFormModal = ({
               name="startDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Start Date</FormLabel>
+                  <FormLabel>Ngày bắt đầu</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -177,7 +177,7 @@ export const BudgetFormModal = ({
               name="endDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>End Date</FormLabel>
+                  <FormLabel>Ngày kết thúc</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -191,10 +191,10 @@ export const BudgetFormModal = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                Hủy
               </Button>
               <Button type="submit">
-                {budget ? "Update" : "Create"}
+                {budget ? "Cập nhật" : "Tạo mới"}
               </Button>
             </DialogFooter>
           </form>

@@ -45,9 +45,9 @@ export const TransactionItem = ({
                 <p className="font-medium">{transaction.description}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge
-                    variant={transaction.type === "income" ? "default" : "secondary"}
+                    variant={transaction.type === "INCOME" ? "default" : "secondary"}
                   >
-                    {transaction.type}
+                    {transaction.type === "INCOME" ? "Thu" : "Chi"}
                   </Badge>
                   {category && (
                     <span className="text-sm text-muted-foreground">
@@ -63,12 +63,12 @@ export const TransactionItem = ({
                 <p
                   className={cn(
                     "font-bold text-lg",
-                    transaction.type === "income"
+                    transaction.type === "INCOME"
                       ? "text-green-600"
                       : "text-red-600"
                   )}
                 >
-                  {transaction.type === "income" ? "+" : "-"}
+                  {transaction.type === "INCOME" ? "+" : "-"}
                   {formatCurrency(transaction.amount)}
                 </p>
               </div>
@@ -86,7 +86,7 @@ export const TransactionItem = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Edit transaction</p>
+                    <p>Chỉnh sửa giao dịch</p>
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -102,7 +102,7 @@ export const TransactionItem = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Delete transaction</p>
+                    <p>Xóa giao dịch</p>
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -113,7 +113,7 @@ export const TransactionItem = ({
           {onEdit && (
             <ContextMenuItem onClick={() => onEdit(transaction)}>
               <Edit className="mr-2 h-4 w-4" />
-              Edit transaction
+              Chỉnh sửa giao dịch
             </ContextMenuItem>
           )}
           {onDelete && (
@@ -124,7 +124,7 @@ export const TransactionItem = ({
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete transaction
+                Xóa giao dịch
               </ContextMenuItem>
             </>
           )}

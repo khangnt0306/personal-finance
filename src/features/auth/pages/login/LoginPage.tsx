@@ -48,19 +48,19 @@ export const LoginPage = () => {
 
   return (
     <AuthShell
-      title="Welcome back"
-      description="Sign in to orchestrate budgets, plan confidently, and sync your financial rituals across every device."
+      title="Chào mừng trở lại"
+      description="Đăng nhập để điều phối ngân sách, lập kế hoạch tự tin và đồng bộ thói quen tài chính trên mọi thiết bị."
       highlights={[
-        "Track spending velocity instantly",
-        "Automate plan approvals with nudges",
-        "Stay aligned with multi-team dashboards",
-        "Export-ready reports in seconds",
+        "Theo dõi tốc độ chi tiêu tức thì",
+        "Tự động nhắc duyệt kế hoạch",
+        "Luôn đồng bộ với nhiều bảng điều khiển",
+        "Xuất báo cáo chỉ trong vài giây",
       ]}
       footer={
         <>
-          New to Aurora?{" "}
+          Mới biết đến Aurora?{" "}
           <Link to="/auth/register" className="font-semibold text-primary hover:underline">
-            Create an account
+            Tạo tài khoản
           </Link>
         </>
       }
@@ -75,7 +75,7 @@ export const LoginPage = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="you@email.com" autoComplete="email" {...field} />
+                    <Input type="email" placeholder="ban@email.com" autoComplete="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,7 +86,7 @@ export const LoginPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Mật khẩu</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="••••••••" autoComplete="current-password" {...field} />
                   </FormControl>
@@ -111,13 +111,13 @@ export const LoginPage = () => {
                         className="h-4 w-4 rounded border-border/80 text-primary accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                       />
                     </FormControl>
-                    <FormLabel className="m-0 cursor-pointer text-sm font-medium">Remember me</FormLabel>
+                    <FormLabel className="m-0 cursor-pointer text-sm font-medium">Ghi nhớ đăng nhập</FormLabel>
                   </div>
                 </FormItem>
               )}
             />
             <Link to="/auth/forgot-password" className="text-sm font-medium text-primary hover:underline">
-              Forgot password?
+              Quên mật khẩu?
             </Link>
           </div>
 
@@ -128,7 +128,7 @@ export const LoginPage = () => {
           ) : null}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in…" : "Sign in"}
+            {isLoading ? "Đang đăng nhập…" : "Đăng nhập"}
           </Button>
         </form>
       </Form>

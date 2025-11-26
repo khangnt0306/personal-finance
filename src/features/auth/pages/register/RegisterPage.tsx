@@ -41,19 +41,19 @@ export const RegisterPage = () => {
 
   return (
     <AuthShell
-      title="Create your account"
-      description="Register in minutes and start orchestrating shared plans, budgets, and smart alerts with Aurora."
+      title="Tạo tài khoản của bạn"
+      description="Đăng ký trong vài phút để quản lý kế hoạch, ngân sách và cảnh báo thông minh cùng Aurora."
       highlights={[
-        "Unlimited workspaces for cross-team visibility",
-        "Real-time fraud monitoring baked in",
-        "AI suggestions to optimize savings",
-        "Early access to roadmap drops",
+        "Không giới hạn workspace cho nhiều nhóm",
+        "Tích hợp theo dõi gian lận theo thời gian thực",
+        "Gợi ý AI tối ưu hóa tiết kiệm",
+        "Truy cập sớm các tính năng mới",
       ]}
       footer={
         <>
-          Already have an account?{" "}
+          Đã có tài khoản?{" "}
           <Link to="/auth/login" className="font-semibold text-primary hover:underline">
-            Sign in
+            Đăng nhập
           </Link>
         </>
       }
@@ -66,9 +66,9 @@ export const RegisterPage = () => {
               name="full_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>Họ và tên</FormLabel>
                   <FormControl>
-                    <Input placeholder="Thompson Nguyen" autoComplete="name" {...field} />
+                    <Input placeholder="Nguyễn Văn A" autoComplete="name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,11 +92,11 @@ export const RegisterPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Mật khẩu</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="At least 8 characters" autoComplete="new-password" {...field} />
+                    <Input type="password" placeholder="Ít nhất 8 ký tự" autoComplete="new-password" {...field} />
                   </FormControl>
-                  <FormDescription>Use a mix of letters, numbers, and symbols.</FormDescription>
+                  <FormDescription>Kết hợp chữ cái, số và ký tự đặc biệt.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -106,9 +106,9 @@ export const RegisterPage = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Re-enter password" autoComplete="new-password" {...field} />
+                    <Input type="password" placeholder="Nhập lại mật khẩu" autoComplete="new-password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +123,7 @@ export const RegisterPage = () => {
           ) : null}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account…" : "Create account"}
+            {isLoading ? "Đang tạo tài khoản…" : "Tạo tài khoản"}
           </Button>
         </form>
       </Form>

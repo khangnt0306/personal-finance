@@ -31,8 +31,8 @@ export const CategoriesPage = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
 
-  const incomeCategories = categories.filter((cat) => cat.type === "income")
-  const expenseCategories = categories.filter((cat) => cat.type === "expense")
+  const incomeCategories = categories.filter((cat) => cat.type === "INCOME")
+  const expenseCategories = categories.filter((cat) => cat.type === "EXPENSE")
 
   const handleCreate = (data: CategoryFormData) => {
     categoryService.create(data)
@@ -78,20 +78,20 @@ export const CategoriesPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Danh mục</h1>
             <p className="text-muted-foreground">
-              Manage your income and expense categories
+              Quản lý các danh mục thu và chi của bạn
             </p>
           </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={() => setIsModalOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Category
+                Thêm danh mục
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Create a new income or expense category</p>
+              <p>Tạo danh mục thu hoặc chi mới</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -100,15 +100,15 @@ export const CategoriesPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>All Categories</CardTitle>
+                <CardTitle>Tất cả danh mục</CardTitle>
                 <CardDescription>
-                  Organize your transactions with categories
+                  Sắp xếp giao dịch rõ ràng bằng danh mục
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline">{incomeCategories.length} Income</Badge>
+                <Badge variant="outline">{incomeCategories.length} Thu nhập</Badge>
                 <Separator orientation="vertical" className="h-4" />
-                <Badge variant="outline">{expenseCategories.length} Expense</Badge>
+                <Badge variant="outline">{expenseCategories.length} Chi tiêu</Badge>
               </div>
             </div>
           </CardHeader>
@@ -122,9 +122,9 @@ export const CategoriesPage = () => {
             ) : (
               <Tabs defaultValue="all" className="w-full">
                 <TabsList>
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="income">Income</TabsTrigger>
-                  <TabsTrigger value="expense">Expense</TabsTrigger>
+                  <TabsTrigger value="all">Tất cả</TabsTrigger>
+                  <TabsTrigger value="income">Thu nhập</TabsTrigger>
+                  <TabsTrigger value="expense">Chi tiêu</TabsTrigger>
                 </TabsList>
                 <TabsContent value="all" className="mt-4">
                   <CategoryList
@@ -155,14 +155,14 @@ export const CategoriesPage = () => {
         <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogTitle>Bạn có chắc không?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the category and may affect associated transactions.
+                Hành động này không thể hoàn tác và sẽ xoá vĩnh viễn danh mục, ảnh hưởng đến các giao dịch liên quan.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+              <AlertDialogCancel>Huỷ</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteConfirm}>Xoá</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

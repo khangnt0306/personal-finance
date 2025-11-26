@@ -9,36 +9,36 @@ const metricHighlight = {
 
 const overviewCardsData = [
   {
-    label: "Net Worth",
+    label: "Giá trị ròng",
     value: "$128,420",
     change: "+6.2%",
     icon: PiggyBank,
     trend: "up" as const,
-    helper: "vs last quarter",
+    helper: "so với quý trước",
   },
   {
-    label: "Monthly Income",
+    label: "Thu nhập tháng",
     value: "$12,850",
     change: "+8.5%",
     icon: TrendingUp,
     trend: "up" as const,
-    helper: "steady acceleration",
+    helper: "tăng trưởng ổn định",
   },
   {
-    label: "Monthly Spend",
+    label: "Chi tiêu tháng",
     value: "$9,110",
     change: "-4.3%",
     icon: Wallet,
     trend: "down" as const,
-    helper: "under smart limits",
+    helper: "trong giới hạn thông minh",
   },
   {
-    label: "Savings Rate",
+    label: "Tỉ lệ tiết kiệm",
     value: "28%",
     change: "+2.1%",
     icon: TrendingUp,
     trend: "up" as const,
-    helper: "goal: 30%",
+    helper: "mục tiêu: 30%",
   },
 ]
 
@@ -62,7 +62,7 @@ export const OverviewCards = () => {
                 {metric.trend === "up" ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
                 {metric.change}
               </div>
-              <span className="text-muted-foreground">Last 30 days</span>
+              <span className="text-muted-foreground">30 ngày gần đây</span>
             </CardContent>
           </Card>
         )

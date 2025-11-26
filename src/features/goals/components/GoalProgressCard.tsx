@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@comp
 import { Progress } from "@components/ui/progress"
 import { Button } from "@components/ui/button"
 import { Coins } from "lucide-react"
+import { formatCurrency } from "@core/utils/format"
 
 export interface GoalProgressCardProps {
   id: string
@@ -18,22 +19,24 @@ export const GoalProgressCard = ({ title, target, current, deadline }: GoalProgr
     <Card className="flex flex-col justify-between">
       <CardHeader>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Coins className="h-4 w-4" /> Goal
+          <Coins className="h-4 w-4" /> Mục tiêu
         </div>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Target ${target.toLocaleString()} · by {deadline}</CardDescription>
+        <CardDescription>Mục tiêu {formatCurrency(target)} · trước {deadline}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-semibold text-white">${current.toLocaleString()}</span>
-            <span className="text-sm text-muted-foreground">funded</span>
+            <span className="text-3xl font-semibold text-white">
+              {formatCurrency(current)}
+            </span>
+            <span className="text-sm text-muted-foreground">đã đóng góp</span>
           </div>
           <Progress value={progress} />
-          <p className="mt-2 text-xs uppercase tracking-wide text-primary">{progress}% locked in</p>
+          <p className="mt-2 text-xs uppercase tracking-wide text-primary">{progress}% đã tích lũy</p>
         </div>
         <Button variant="secondary" className="w-full">
-          Boost contribution
+          Tăng đóng góp
         </Button>
       </CardContent>
     </Card>

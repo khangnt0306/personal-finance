@@ -24,32 +24,32 @@ interface PlanListProps {
 
 export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) => {
   return (
-    <Card>
+    <Card className="p-3 rounded-2xl">
       <CardContent className="p-0">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Currency</TableHead>
-              <TableHead>Plan Type</TableHead>
-              <TableHead>Auto Repeat</TableHead>
-              <TableHead>Auto Adjust</TableHead>
-              <TableHead>Warning Levels</TableHead>
-              <TableHead>Daily Min Limit</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Tên</TableHead>
+              <TableHead>Tiền tệ</TableHead>
+              <TableHead>Loại kế hoạch</TableHead>
+              <TableHead>Tự lặp lại</TableHead>
+              <TableHead>Tự điều chỉnh</TableHead>
+              <TableHead>Mức cảnh báo</TableHead>
+              <TableHead>Giới hạn tối thiểu/ngày</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                  Loading plans...
+                  Đang tải danh sách kế hoạch...
                 </TableCell>
               </TableRow>
             ) : plans.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                  No plans found. Create your first plan to get started.
+                  Chưa có kế hoạch nào. Hãy tạo kế hoạch đầu tiên để bắt đầu.
                 </TableCell>
               </TableRow>
             ) : (
@@ -112,7 +112,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                           size="icon"
                           variant="ghost"
                           onClick={() => onEdit(plan)}
-                          aria-label={`Edit ${plan.name}`}
+                          aria-label={`Chỉnh sửa ${plan.name}`}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -121,7 +121,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                           variant="ghost"
                           className="text-destructive hover:text-destructive"
                           onClick={() => onDelete(plan)}
-                          aria-label={`Delete ${plan.name}`}
+                          aria-label={`Xóa ${plan.name}`}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

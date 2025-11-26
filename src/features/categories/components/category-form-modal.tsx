@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@components/ui/select"
+import { Textarea } from "@components/ui/textarea"
 import { categorySchema, type CategoryFormData } from "@core/validation/schemas"
 import type { Category } from "@core/types"
 
@@ -45,9 +46,10 @@ export const CategoryFormModal = ({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: category?.name || "",
-      type: category?.type || "expense",
-      icon: category?.icon || "",
-      color: category?.color || "",
+      description: category?.description || "",
+      status: category?.status || "ACTIVE",
+      type: category?.type || "EXPENSE",
+      Icon: category?.Icon || "",
     },
   })
 
@@ -62,12 +64,12 @@ export const CategoryFormModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {category ? "Edit Category" : "Create Category"}
+            {category ? "Chỉnh sửa danh mục" : "Tạo danh mục"}
           </DialogTitle>
           <DialogDescription>
             {category
-              ? "Update category information"
-              : "Add a new category to organize your transactions"}
+              ? "Cập nhật thông tin danh mục hiện có"
+              : "Thêm danh mục mới để tổ chức giao dịch"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -77,9 +79,22 @@ export const CategoryFormModal = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Tên danh mục</FormLabel>
                   <FormControl>
-                    <Input placeholder="Category name" {...field} />
+                    <Input placeholder="Ví dụ: Ăn uống" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mô tả</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Ghi chú thêm cho danh mục" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -90,19 +105,19 @@ export const CategoryFormModal = ({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                  <FormLabel>Loại</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
+                        <SelectValue placeholder="Chọn loại" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="income">Income</SelectItem>
-                      <SelectItem value="expense">Expense</SelectItem>
+                      <SelectItem value="INCOME">Thu nhập</SelectItem>
+                      <SelectItem value="EXPENSE">Chi tiêu</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -111,25 +126,36 @@ export const CategoryFormModal = ({
             />
             <FormField
               control={form.control}
-              name="icon"
+              name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon (Emoji)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="💰" {...field} />
-                  </FormControl>
+                  <FormLabel>Trạng thái</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Chọn trạng thái" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ACTIVE">Đang sử dụng</SelectItem>
+                      <SelectItem value="INACTIVE">Tạm ẩn</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="color"
+              name="Icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>Biểu tượng</FormLabel>
                   <FormControl>
-                    <Input type="color" {...field} />
+                    <Input placeholder="Ví dụ: shopping-bag hoặc 🙂" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,10 +167,10 @@ export const CategoryFormModal = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                Huỷ
               </Button>
               <Button type="submit">
-                {category ? "Update" : "Create"}
+                {category ? "Cập nhật" : "Tạo mới"}
               </Button>
             </DialogFooter>
           </form>

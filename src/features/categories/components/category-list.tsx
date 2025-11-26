@@ -16,7 +16,7 @@ export const CategoryList = ({
   if (categories.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        No categories found
+        Không tìm thấy danh mục nào
       </div>
     )
   }

@@ -26,41 +26,41 @@ export const PreferencesPage = () => {
   return (
     <div className="space-y-8">
       <header className="space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-wide text-primary">Settings</p>
-        <h1 className="text-3xl font-semibold text-white">Preferences</h1>
-        <p className="text-muted-foreground">Customize your application experience and appearance.</p>
+        <p className="text-sm font-semibold uppercase tracking-wide text-primary">Cài đặt</p>
+        <h1 className="text-3xl font-semibold text-white">Tùy chọn</h1>
+        <p className="text-muted-foreground">Tùy biến trải nghiệm và giao diện ứng dụng.</p>
       </header>
 
       {saved && (
         <Alert variant="success">
           <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Preferences Saved</AlertTitle>
-          <AlertDescription>Your preferences have been updated successfully.</AlertDescription>
+          <AlertTitle>Đã lưu tùy chọn</AlertTitle>
+          <AlertDescription>Cấu hình hiển thị của bạn đã được cập nhật.</AlertDescription>
         </Alert>
       )}
 
       <Card>
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Customize the look and feel of the application</CardDescription>
+          <CardTitle>Giao diện</CardTitle>
+          <CardDescription>Điều chỉnh diện mạo của ứng dụng</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Dark Mode</Label>
-              <p className="text-sm text-muted-foreground">Switch to dark theme</p>
+              <Label>Chế độ tối</Label>
+              <p className="text-sm text-muted-foreground">Chuyển sang giao diện tối</p>
             </div>
             <Switch checked={darkMode} onCheckedChange={setDarkMode} />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Compact View</Label>
-              <p className="text-sm text-muted-foreground">Use a more compact layout</p>
+              <Label>Chế độ cô đọng</Label>
+              <p className="text-sm text-muted-foreground">Sử dụng bố cục gọn hơn</p>
             </div>
             <Switch checked={compactView} onCheckedChange={setCompactView} />
           </div>
           <div>
-            <Label className="mb-2 block">Font Size</Label>
+            <Label className="mb-2 block">Cỡ chữ</Label>
             <Slider
               value={fontSize}
               onValueChange={setFontSize}
@@ -80,34 +80,34 @@ export const PreferencesPage = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>General Settings</CardTitle>
-          <CardDescription>Configure general application behavior</CardDescription>
+          <CardTitle>Cài đặt chung</CardTitle>
+          <CardDescription>Điều chỉnh cách ứng dụng hoạt động</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Auto Save</Label>
-              <p className="text-sm text-muted-foreground">Automatically save changes</p>
+              <Label>Tự động lưu</Label>
+              <p className="text-sm text-muted-foreground">Lưu thay đổi tự động</p>
             </div>
             <Switch checked={autoSave} onCheckedChange={setAutoSave} />
           </div>
           <div>
-            <Label className="mb-2 block">Currency</Label>
+            <Label className="mb-2 block">Đơn vị tiền tệ</Label>
             <Select value={currency} onValueChange={setCurrency}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="USD">USD - US Dollar</SelectItem>
+                <SelectItem value="USD">USD - Đô la Mỹ</SelectItem>
                 <SelectItem value="EUR">EUR - Euro</SelectItem>
-                <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
-                <SelectItem value="VND">VND - Vietnamese Dong</SelectItem>
+                <SelectItem value="GBP">GBP - Bảng Anh</SelectItem>
+                <SelectItem value="JPY">JPY - Yên Nhật</SelectItem>
+                <SelectItem value="VND">VND - Đồng Việt Nam</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label className="mb-2 block">Date Format</Label>
+            <Label className="mb-2 block">Định dạng ngày</Label>
             <RadioGroup value={dateFormat} onValueChange={setDateFormat}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="MM/DD/YYYY" id="mmddyyyy" />
@@ -127,7 +127,7 @@ export const PreferencesPage = () => {
       </Card>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave}>Save Preferences</Button>
+        <Button onClick={handleSave}>Lưu tùy chọn</Button>
       </div>
     </div>
   )

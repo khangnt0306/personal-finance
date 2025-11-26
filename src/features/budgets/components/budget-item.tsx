@@ -34,13 +34,15 @@ export const BudgetItem = ({
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          {category?.icon && (
-            <span className="text-2xl">{category.icon}</span>
+          {category?.Icon && (
+            <span className="text-2xl">{category.Icon}</span>
           )}
           <div>
-            <p className="font-medium">{category?.name || "Unknown"}</p>
+            <p className="font-medium">{category?.name || "Không xác định"}</p>
             <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline">{budget.period}</Badge>
+              <Badge variant="outline">
+                {budget.period === "monthly" ? "Hàng tháng" : "Hàng năm"}
+              </Badge>
               <span className="text-sm text-muted-foreground">
                 {formatDate(budget.startDate)} - {formatDate(budget.endDate)}
               </span>
@@ -70,17 +72,17 @@ export const BudgetItem = ({
       </div>
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Spent</span>
+          <span className="text-muted-foreground">Đã chi</span>
           <span className={cn("font-medium", isOverBudget && "text-destructive")}>
             {formatCurrency(spent)} / {formatCurrency(budget.amount)}
           </span>
         </div>
         <Progress value={Math.min(percentage, 100)} className={cn(isOverBudget && "bg-destructive")} />
         <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Remaining</span>
+          <span className="text-muted-foreground">Còn lại</span>
           <span className={cn("font-medium", remaining < 0 && "text-destructive")}>
             {formatCurrency(Math.abs(remaining))}
-            {remaining < 0 && " over budget"}
+            {remaining < 0 && " vượt ngân sách"}
           </span>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { storageAdapter } from "@core/adapters/storage.adapter"
 import { APP_CONFIG } from "@core/config/app.config"
 import { generateId } from "@core/adapters/mock-data"
 import type { CategoryFormData } from "@core/validation/schemas"
+import type { TransactionType } from "@core/types"
 
 class CategoryService {
   private getStorageKey() {
@@ -18,7 +19,7 @@ class CategoryService {
     return categories.find((cat) => cat.id === id) || null
   }
 
-  getByType(type: "income" | "expense"): Category[] {
+  getByType(type: TransactionType): Category[] {
     const categories = this.getAll()
     return categories.filter((cat) => cat.type === type)
   }
@@ -28,9 +29,10 @@ class CategoryService {
     const now = new Date().toISOString()
     const newCategory: Category = {
       id: generateId(),
-      ...data,
       createdAt: now,
       updatedAt: now,
+      isDefault: false,
+      ...data,
     }
     categories.push(newCategory)
     storageAdapter.set(this.getStorageKey(), categories)

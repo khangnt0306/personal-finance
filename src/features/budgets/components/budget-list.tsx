@@ -16,7 +16,7 @@ export const BudgetList = ({
   if (budgets.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        No budgets found
+        Không tìm thấy ngân sách nào
       </div>
     )
   }
