@@ -29,7 +29,6 @@ export const planItemSchema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
   excludeType: z.enum(["FIXED", "FLEXIBLE"]),
   categoryId: z.string().min(1, "Category is required"),
-  isDailyBased: z.boolean(),
   minimumPercentage: z.number().min(0).max(100).optional(),
 }).refine((data) => {
   // minimumPercentage required when type=EXPENSE and excludeType=FLEXIBLE

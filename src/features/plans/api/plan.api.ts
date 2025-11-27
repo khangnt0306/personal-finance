@@ -22,6 +22,20 @@ export const planApi = injectCRUD<Plan>({
       },
       providesTags: [{ type: "Plan", id: "LIST" }],
     }),
+    updatePlanStatus: build.mutation<Plan, { id: string; status: "ACTIVE" | "INACTIVE" }>({
+      query: ({ id, status }) => ({
+        url: `/plans/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: (result, _error, { id }) =>
+        result
+          ? [
+              { type: "Plan", id },
+              { type: "Plan", id: "LIST" },
+            ]
+          : [{ type: "Plan", id: "LIST" }],
+    }),
   }),
 })
 
@@ -33,7 +47,9 @@ export const {
   useRemoveMutation: useDeletePlanMutation,
 } = planApi
 
-// Export custom endpoint hook manually
+// Export custom endpoint hooks manually
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useGetSelfPlansQuery = (planApi as any).endpoints.getSelfPlans.useQuery
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useUpdatePlanStatusMutation = (planApi as any).endpoints.updatePlanStatus.useMutation
 

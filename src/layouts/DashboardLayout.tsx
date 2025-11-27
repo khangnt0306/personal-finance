@@ -2,31 +2,26 @@ import { useEffect, useMemo, useState } from "react"
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@lib/utils"
-import { Wallet, TrendingUp, PieChart, Settings, Home, List, Menu, X, LogOut } from "lucide-react"
+import { Wallet, TrendingUp, PieChart, Settings, Home, List, Menu, X, LogOut, Bell } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { MotionContainer } from "@components/ui/motion-primitives"
 import { drawerTransition, overlayTransition } from "../styles/motion"  
 import { useAppDispatch, useAppSelector } from "@store/hooks"
 import { logout } from "@store/slices/auth/auth.slice"
+import { getInitials } from "@utils/displayName"
+import MoneyIcon from "../../public/icons/money-icon.svg"  
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
-  { name: "Plans", href: "/plans", icon: List },
-  { name: "Transactions", href: "/transactions", icon: Wallet },
-  { name: "Budgets", href: "/budgets", icon: TrendingUp },
-  { name: "Reports", href: "/reports", icon: PieChart },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Tổng quan", href: "/", icon: Home }, 
+  { name: "Kế hoạch", href: "/plans", icon: List },
+  { name: "Giao dịch", href: "/transactions", icon: Wallet },
+  { name: "Ngân sách", href: "/budgets", icon: TrendingUp },
+  { name: "Báo cáo", href: "/reports", icon: PieChart },
+  { name: "Cài đặt", href: "/settings", icon: Settings },
 ]
 
 const SIDEBAR_WIDTH = 288
 
-const getInitials = (name: string) =>
-  name
-    .split(" ")
-    .map((part) => part.charAt(0))
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
 
 export const DashboardLayout = () => {
   const location = useLocation()
@@ -86,12 +81,12 @@ export const DashboardLayout = () => {
         aria-hidden={!isSidebarOpen && !isDesktop}
       >
         <div className="flex items-center gap-3 ">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl">
-            💰
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl p-2">
+            <img src={MoneyIcon} alt="Money Icon" className="h-full w-full object-cover" />
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Personal finance
+              Personal finance  
             </p>
             <p className="text-2xl font-semibold text-foreground">FinK</p>
           </div>
@@ -157,7 +152,7 @@ export const DashboardLayout = () => {
               }}
             >
               <LogOut className="h-5 w-5" />
-              Logout
+              Đăng xuất
             </Button>
           </div>
         </nav>
@@ -182,17 +177,14 @@ export const DashboardLayout = () => {
               </Button>
               <div className=" pl-10">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                  Currently viewing
+                  Đang xem 
                 </p>
                 <h2 className="text-xl font-semibold text-foreground sm:text-2xl">{activeNav.name}</h2>
               </div>
             </div>
             <div className="flex flex-1 items-center justify-end gap-3">
-              <Button variant="ghost" className="hidden sm:inline-flex">
-                Notifications
-              </Button>
-              <Button variant="default" className="rounded-full">
-                Quick action
+              <Button variant="ghost" className="hidden sm:inline-flex rounded-full border border-border/60 bg-white/70 shadow-soft ">
+                <Bell className="h-5 w-5 " />
               </Button>
             </div>
           </div>

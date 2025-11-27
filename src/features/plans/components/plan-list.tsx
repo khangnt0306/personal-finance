@@ -34,8 +34,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
               <TableHead>Loại kế hoạch</TableHead>
               <TableHead>Tự lặp lại</TableHead>
               <TableHead>Tự điều chỉnh</TableHead>
-              <TableHead>Mức cảnh báo</TableHead>
-              <TableHead>Giới hạn tối thiểu/ngày</TableHead>
+
               <TableHead className="text-right">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,21 +89,6 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
                       )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
-                          {plan.warnLevelYellow}%
-                        </Badge>
-                        <Badge variant="outline" className="bg-red-50 text-red-700 border-red-300">
-                          {plan.warnLevelRed}%
-                        </Badge>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-sm font-medium">
-                        {plan.dailyMinLimit}%
-                      </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">

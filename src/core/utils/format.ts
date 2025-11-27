@@ -31,7 +31,7 @@ export const formatCurrency = (value: number, currency: Currency | string = "VND
     useGrouping: true,
   }).format(value)
   
-  return `${symbol} ${formatted}`
+  return ` ${formatted} ${symbol}`
 }
 
 export const formatDate = (date: string | Date, format?: string): string => {

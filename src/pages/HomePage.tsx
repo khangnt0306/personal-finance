@@ -143,9 +143,10 @@ export const HomePage = () => {
     <TooltipProvider>
       <div className="space-y-10">
         <PageHeader
+          className="relative overflow-hidden border border-white/40 bg-white/70 shadow-soft-xl backdrop-blur-xl"
           title="Tổng quan tài chính"
           description="Theo dõi thu nhập, chi tiêu và hoạt động theo thời gian thực trong không gian quản lý tài chính của bạn."
-          breadcrumbs={[{ label: "Bảng điều khiển" }, { label: "Tổng quan" }]}
+          breadcrumbs={[ { label: "Tổng quan" }]}
           actions={
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <DatePicker
@@ -236,7 +237,7 @@ export const HomePage = () => {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <MotionCard className="p-8">
+          <MotionCard className="p-8 relative overflow-hidden border border-white/40 bg-white/70 shadow-soft-xl backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Số dư ròng</p>
@@ -252,7 +253,7 @@ export const HomePage = () => {
             </p>
           </MotionCard>
 
-          <MotionCard className="p-8">
+          <MotionCard className="p-8 relative overflow-hidden border border-white/40 bg-white/70 shadow-soft-xl backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Hoạt động gần đây</p>
