@@ -16,7 +16,7 @@ export const PlanItemsFilter = ({ filterType, onFilterChange }: PlanItemsFilterP
   ]
 
   return (
-    <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-muted/30 backdrop-blur-sm border border-border/40">
+    <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-lg bg-muted/30 backdrop-blur-sm border border-border/40">
       {filterOptions.map((option) => {
         const Icon = option.icon
         const isActive = filterType === option.value
@@ -27,7 +27,7 @@ export const PlanItemsFilter = ({ filterType, onFilterChange }: PlanItemsFilterP
             size="sm"
             variant="ghost"
             className={`
-              relative px-4 py-2 rounded-md transition-all duration-200
+              relative px-2 py-1.5 sm:px-4 sm:py-2 rounded-md transition-all duration-200 text-xs sm:text-sm
               ${
                 isActive
                   ? option.value === "INCOME"
@@ -40,8 +40,9 @@ export const PlanItemsFilter = ({ filterType, onFilterChange }: PlanItemsFilterP
             `}
             onClick={() => onFilterChange(option.value)}
           >
-            <Icon className="h-4 w-4 mr-1.5" />
-            {option.label}
+            <Icon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
+            <span className="hidden xs:inline sm:inline">{option.label}</span>
+            <span className="xs:hidden">{option.label.charAt(0)}</span>
           </Button>
         )
       })}

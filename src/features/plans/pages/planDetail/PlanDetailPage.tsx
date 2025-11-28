@@ -160,21 +160,21 @@ export const PlanDetailPage = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-96 w-full" />
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+        <Skeleton className="h-24 sm:h-32 w-full" />
+        <Skeleton className="h-64 sm:h-96 w-full" />
       </div>
     )
   }
 
   if (!plan) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 lg:space-y-8">
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <p className="text-lg text-muted-foreground">Không tìm thấy kế hoạch</p>
-            <Button onClick={handleBack} variant="outline" className="mt-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+          <CardContent className="flex flex-col items-center justify-center py-12 sm:py-16">
+            <p className="text-base sm:text-lg text-muted-foreground">Không tìm thấy kế hoạch</p>
+            <Button onClick={handleBack} variant="outline" className="mt-3 sm:mt-4">
+              <ArrowLeft className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Quay lại danh sách
             </Button>
           </CardContent>
@@ -184,7 +184,7 @@ export const PlanDetailPage = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       <PageHeader
       className="relative overflow-hidden border border-white/40 bg-white/70 shadow-soft-xl backdrop-blur-xl"
         title={plan.name}
@@ -196,8 +196,8 @@ export const PlanDetailPage = () => {
         ]}
         actions={
           <div className="h-full">
-            <div className="flex  items-center gap-3 absolute right-0 top-0">
-              <Label htmlFor="plan-status" className="text-sm font-medium text-muted-foreground">
+            <div className="flex items-center gap-2 sm:gap-3 absolute right-0 top-0">
+              <Label htmlFor="plan-status" className="text-xs sm:text-sm font-medium text-muted-foreground hidden sm:block">
                 {plan.status === "ACTIVE" ? "Đang hoạt động" : "Không hoạt động"}
               </Label>
               <Switch
@@ -205,15 +205,15 @@ export const PlanDetailPage = () => {
                 checked={plan.status === "ACTIVE"}
                 onCheckedChange={handleStatusToggle}
                 disabled={isUpdatingStatus}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-400"
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-400 scale-75 sm:scale-100"
               />
             </div>
-            <div className="flex gap-3">
-              <Button variant="ghost" onClick={handleEdit} className="p-4 border hover:scale-110 transition-all duration-200">
-                <Edit className="text-blue-600 h-4 w-4" />
+            <div className="flex gap-2 sm:gap-3">
+              <Button variant="ghost" onClick={handleEdit} className="p-2.5 sm:p-4 border hover:scale-110 transition-all duration-200">
+                <Edit className="text-blue-600 h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </Button>
-              <Button variant="ghost" className="p-4 text-destructive hover:text-destructive hover:scale-110 transition-all duration-200" onClick={handleDelete}>
-                <Trash2 className="text-destructive h-4 w-4" />
+              <Button variant="ghost" className="p-2.5 sm:p-4 text-destructive hover:text-destructive hover:scale-110 transition-all duration-200" onClick={handleDelete}>
+                <Trash2 className="text-destructive h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>

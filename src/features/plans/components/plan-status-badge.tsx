@@ -17,6 +17,6 @@ const PLAN_TYPE_CONFIG: Record<
 
 export const PlanTypeBadge = ({ planType }: PlanTypeBadgeProps) => {
   const config = PLAN_TYPE_CONFIG[planType]
-  return <Badge variant={config.variant} className="rounded-md">{config.label}</Badge>
+  return <Badge variant={config.variant} className="rounded-md text-xs sm:text-sm">{config.label}</Badge>
 }
 

@@ -122,7 +122,7 @@ export const handleViewTransactions = (
   item: PlanItem,
   openDrawer: (item: PlanItem) => void
 ) => {
-  if (item.excludeType === "FIXED") return
+  if (item.excludeType === "FIXED" && item.type === "INCOME") return
   openDrawer(item)
 }
 
