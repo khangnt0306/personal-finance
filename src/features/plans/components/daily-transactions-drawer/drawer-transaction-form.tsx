@@ -1,7 +1,8 @@
-import { useForm, type Resolver } from "react-hook-form"
+import { useForm, useWatch, type Resolver } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@components/ui/button"
 import { Input } from "@components/ui/input"
+import { Checkbox } from "@components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -16,6 +17,10 @@ import {
   useCreateDailyTransactionMutation,
   useUpdateDailyTransactionMutation,
 } from "../../api/daily-transaction.api"
+import {
+  useCreateDefaultTransactionMutation,
+  useUpdateDefaultTransactionMutation,
+} from "../../api/default-transaction.api"
 import {
   dailyTransactionSchema,
   type DailyTransactionFormData,
@@ -34,6 +39,8 @@ export const DrawerTransactionForm = ({
 }: TransactionFormProps) => {
   const [createTransaction, { isLoading: isCreating }] = useCreateDailyTransactionMutation()
   const [updateTransaction, { isLoading: isUpdating }] = useUpdateDailyTransactionMutation()
+  const [createDefaultTransaction, { isLoading: isCreatingDefault }] = useCreateDefaultTransactionMutation()
+  const [updateDefaultTransaction, { isLoading: isUpdatingDefault }] = useUpdateDefaultTransactionMutation()
 
   const form = useForm<DailyTransactionFormData>({
     resolver: zodResolver(dailyTransactionSchema) as Resolver<DailyTransactionFormData>,
@@ -41,7 +48,15 @@ export const DrawerTransactionForm = ({
       date: editingTransaction?.date || new Date().toISOString().split("T")[0],
       label: editingTransaction?.label || "",
       amount: editingTransaction?.amount || "",
+      isDefault: false,
     },
+  })
+
+  // Watch isDefault field to conditionally show/hide date field
+  const isDefaultChecked = useWatch({
+    control: form.control,
+    name: "isDefault",
+    defaultValue: false,
   })
 
   // Reset form when editingTransaction changes
@@ -50,26 +65,74 @@ export const DrawerTransactionForm = ({
       date: editingTransaction?.date || new Date().toISOString().split("T")[0],
       label: editingTransaction?.label || "",
       amount: editingTransaction?.amount || "",
+      isDefault: false,
     })
   }, [editingTransaction, form])
 
   const handleSubmit = async (data: DailyTransactionFormData) => {
     try {
+      const isDefaultTransaction = data.isDefault === true
+
       if (editingTransaction) {
-        await updateTransaction({
-          planId,
-          itemId: planItem.id,
-          transactionId: editingTransaction.id,
-          data,
-        }).unwrap()
-        showSuccess("Đã cập nhật giao dịch")
+        // Update existing transaction
+        if (isDefaultTransaction) {
+          // For default transactions, only send label, amount, enabled
+          const defaultPayload = {
+            label: data.label,
+            amount: data.amount,
+            enabled: true,
+          }
+          await updateDefaultTransaction({
+            planId,
+            itemId: planItem.id,
+            transactionId: editingTransaction.id,
+            data: defaultPayload,
+          }).unwrap()
+          showSuccess("Đã cập nhật giao dịch mặc định")
+        } else {
+          // For regular transactions, send date, label, amount (no isDefault)
+          const regularPayload = {
+            date: data.date,
+            label: data.label,
+            amount: data.amount,
+          }
+          await updateTransaction({
+            planId,
+            itemId: planItem.id,
+            transactionId: editingTransaction.id,
+            data: regularPayload,
+          }).unwrap()
+          showSuccess("Đã cập nhật giao dịch")
+        }
       } else {
-        await createTransaction({
-          planId,
-          itemId: planItem.id,
-          data,
-        }).unwrap()
-        showSuccess("Tạo giao dịch thành công")
+        // Create new transaction
+        if (isDefaultTransaction) {
+          // For default transactions, only send label, amount, enabled
+          const defaultPayload = {
+            label: data.label,
+            amount: data.amount,
+            enabled: true,
+          }
+          await createDefaultTransaction({
+            planId,
+            itemId: planItem.id,
+            data: defaultPayload,
+          }).unwrap()
+          showSuccess("Tạo giao dịch mặc định thành công")
+        } else {
+          // For regular transactions, send date, label, amount (no isDefault)
+          const regularPayload = {
+            date: data.date,
+            label: data.label,
+            amount: data.amount,
+          }
+          await createTransaction({
+            planId,
+            itemId: planItem.id,
+            data: regularPayload,
+          }).unwrap()
+          showSuccess("Tạo giao dịch thành công")
+        }
       }
       onSuccess()
     } catch (error) {
@@ -88,29 +151,56 @@ export const DrawerTransactionForm = ({
       <CardContent className="p-4 sm:p-6 pt-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3 sm:space-y-4">
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs sm:text-sm">Ngày</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Calendar className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                      <Input type="date" {...field} className="pl-8 sm:pl-10 text-xs sm:text-sm h-9 sm:h-10" />
+            {(planItem.type === "EXPENSE" && planItem.excludeType !== "FIXED") && (
+              <FormField
+                control={form.control}
+                name="isDefault"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-lg border border-border/60 bg-muted/30 p-3 sm:p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="rounded-full mt-0.5"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-xs sm:text-sm font-medium">
+                        Giao dịch mặc định
+                      </FormLabel>
+                      <p className="text-xs text-muted-foreground">
+                        Đánh dấu đây là giao dịch thường xuyên hằng ngày
+                      </p>
                     </div>
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
-            />
+                  </FormItem>
+                )}
+              />
+            )}
+            {!(planItem.type === "EXPENSE" && planItem.excludeType !== "FIXED") && !isDefaultChecked && (
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs sm:text-sm">Ngày</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Calendar className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                        <Input type="date" {...field} className="pl-8 sm:pl-10 text-xs sm:text-sm h-9 sm:h-10" />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
               name="label"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs sm:text-sm">Mô tả</FormLabel>  
+                  <FormLabel className="text-xs sm:text-sm">Mô tả</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Tag className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
@@ -153,8 +243,12 @@ export const DrawerTransactionForm = ({
               <Button type="button" variant="outline" onClick={onCancel} className="text-xs sm:text-sm h-9 sm:h-10">
                 Hủy
               </Button>
-              <Button type="submit" disabled={isCreating || isUpdating} className="text-xs sm:text-sm h-9 sm:h-10">
-                {isCreating || isUpdating
+              <Button
+                type="submit"
+                disabled={isCreating || isUpdating || isCreatingDefault || isUpdatingDefault}
+                className="text-xs sm:text-sm h-9 sm:h-10"
+              >
+                {isCreating || isUpdating || isCreatingDefault || isUpdatingDefault
                   ? "Đang lưu..."
                   : editingTransaction
                     ? "Cập nhật"

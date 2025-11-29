@@ -59,7 +59,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                       <div className="flex flex-col">
                         <Link 
                           to={`/plans/${plan.id}`}
-                          className="font-medium text-primary hover:underline"
+                          className="font-medium text-primary "
                         >
                           {plan.name}
                         </Link>
@@ -98,7 +98,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                           onClick={() => onEdit(plan)}
                           aria-label={`Chỉnh sửa ${plan.name}`}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-4 w-4 text-blue-600" />
                         </Button>
                         <Button
                           size="icon"
@@ -139,7 +139,7 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                 <div className="flex items-start justify-between">
                   <Link 
                     to={`/plans/${plan.id}`}
-                    className="flex-1 font-semibold text-primary hover:underline"
+                    className="flex-1 font-semibold text-primary "
                   >
                     {plan.name}
                   </Link>
@@ -147,11 +147,11 @@ export const PlanList = ({ plans, onEdit, onDelete, isLoading }: PlanListProps) 
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-8 w-8"
+                      className="h-8 w-8 "
                       onClick={() => onEdit(plan)}
                       aria-label={`Chỉnh sửa ${plan.name}`}
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-4 w-4 text-blue-600" />  
                     </Button>
                     <Button
                       size="icon"

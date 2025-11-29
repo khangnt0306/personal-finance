@@ -9,10 +9,11 @@ import {
 import { Button } from "@components/ui/button"
 import { Plus } from "lucide-react"
 import { useGetDailyTransactionsQuery } from "../../api/daily-transaction.api"
-import type { DailyTransaction } from "../../types/daily-transaction.types"
+import type { DailyTransaction, DefaultTransaction } from "../../types/daily-transaction.types"
 import type { DailyTransactionsDrawerProps, SummaryStats } from "./types"
 import { DrawerSummaryStats } from "./drawer-summary-stats"
 import { DrawerTransactionForm } from "./drawer-transaction-form"
+import { DrawerDefaultTransactionForm } from "./drawer-default-transaction-form"
 import { DrawerTransactionsList } from "./drawer-transactions-list"
 import { parseISO, isToday } from "date-fns"
 
@@ -25,6 +26,8 @@ export const DailyTransactionsDrawer = ({
 }: DailyTransactionsDrawerProps) => {
   const [isCreating, setIsCreating] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<DailyTransaction | null>(null)
+  const [isEditingDefault, setIsEditingDefault] = useState(false)
+  const [editingDefaultTransaction, setEditingDefaultTransaction] = useState<DefaultTransaction | null>(null)
 
   const { data: transactionsData, isLoading } = useGetDailyTransactionsQuery(
     {
@@ -38,21 +41,39 @@ export const DailyTransactionsDrawer = ({
   const handleCreateNew = () => {
     setEditingTransaction(null)
     setIsCreating(true)
+    setIsEditingDefault(false)
   }
 
   const handleEdit = (transaction: DailyTransaction) => {
     setEditingTransaction(transaction)
     setIsCreating(true)
+    setIsEditingDefault(false)
+  }
+
+  const handleCreateDefaultNew = () => {
+    setEditingDefaultTransaction(null)
+    setIsCreating(true)
+    setIsEditingDefault(true)
+  }
+
+  const handleEditDefault = (transaction: DefaultTransaction) => {
+    setEditingDefaultTransaction(transaction)
+    setIsCreating(true)
+    setIsEditingDefault(true)
   }
 
   const handleFormSuccess = () => {
     setIsCreating(false)
     setEditingTransaction(null)
+    setEditingDefaultTransaction(null)
+    setIsEditingDefault(false)
   }
 
   const handleFormCancel = () => {
     setIsCreating(false)
     setEditingTransaction(null)
+    setEditingDefaultTransaction(null)
+    setIsEditingDefault(false)
   }
 
   // Calculate summary statistics
@@ -95,8 +116,16 @@ export const DailyTransactionsDrawer = ({
 
         <div className="mt-6 space-y-4">
           {/* Summary Statistics */}
-          {!isLoading && transactionsData?.days && transactionsData.days.length > 0 && (
-            <DrawerSummaryStats summary={summary} currency={currency} />
+          {!isLoading && transactionsData?.days && transactionsData.days.length > 0 && planItem && (
+            <DrawerSummaryStats 
+              summary={summary} 
+              currency={currency}
+              planId={planId}
+              itemId={planItem.id}
+              isDefaultExcluded={planItem.type === "EXPENSE" && planItem.excludeType === "FIXED"}
+              onEditDefault={handleEditDefault}
+              onCreateDefault={handleCreateDefaultNew}
+            />
           )}
 
           {/* Create Button */}
@@ -119,13 +148,25 @@ export const DailyTransactionsDrawer = ({
 
           {/* Create/Edit Form */}
           {isCreating && planItem && (
-            <DrawerTransactionForm
-              planId={planId}
-              planItem={planItem}
-              editingTransaction={editingTransaction}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-            />
+            <>
+              {isEditingDefault ? (
+                <DrawerDefaultTransactionForm
+                  planId={planId}
+                  planItem={planItem}
+                  editingTransaction={editingDefaultTransaction}
+                  onSuccess={handleFormSuccess}
+                  onCancel={handleFormCancel}
+                />
+              ) : (
+                <DrawerTransactionForm
+                  planId={planId}
+                  planItem={planItem}
+                  editingTransaction={editingTransaction}
+                  onSuccess={handleFormSuccess}
+                  onCancel={handleFormCancel}
+                />
+              )}
+            </>
           )}
 
           {/* Transactions List */}

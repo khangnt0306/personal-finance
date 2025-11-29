@@ -52,7 +52,7 @@ export const DataToolbar = ({
               onClick={() => onViewChange?.(option.value)}
             >
               {option.icon ? <span className="mr-1 sm:mr-2 scale-75 sm:scale-100">{option.icon}</span> : null}
-              <span className="hidden xs:inline">{option.label}</span>
+              <span>{option.label}</span>
             </Button>
           ))}
         </div>

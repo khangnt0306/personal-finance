@@ -1,15 +1,30 @@
 import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
-import { TrendingUp, Clock, Hash,ChartLine } from "lucide-react"
+import { TrendingUp, Clock, Hash, ChartLine } from "lucide-react"
 import { formatCurrency } from "@core/utils/format"
+import { DrawerDefaultTransactionsList } from "./drawer-default-transactions-list"
 import type { SummaryStats } from "./types"
+import type { DefaultTransaction } from "../../types/daily-transaction.types"
 
 interface DrawerSummaryStatsProps {
   summary: SummaryStats
   currency: string
+  planId: string
+  itemId: string
+  isDefaultExcluded: boolean
+  onEditDefault: (transaction: DefaultTransaction) => void
+  onCreateDefault: () => void
 }
 
-export const DrawerSummaryStats = ({ summary, currency }: DrawerSummaryStatsProps) => {
+export const DrawerSummaryStats = ({ 
+  summary, 
+  currency, 
+  planId, 
+  itemId, 
+  isDefaultExcluded,
+  onEditDefault,
+  onCreateDefault,
+}: DrawerSummaryStatsProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -82,6 +97,17 @@ export const DrawerSummaryStats = ({ summary, currency }: DrawerSummaryStatsProp
               <p className="text-sm sm:text-lg font-bold truncate">{formatCurrency(summary.average, currency)}</p>
             </motion.div>
           </div>
+
+          {/* Default Transactions List */}
+          {!isDefaultExcluded && (
+            <DrawerDefaultTransactionsList
+              planId={planId}
+              itemId={itemId}
+              currency={currency}
+              onEdit={onEditDefault}
+              onCreateNew={onCreateDefault}
+            />
+          )}
         </CardContent>
       </Card>
     </motion.div>

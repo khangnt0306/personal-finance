@@ -1,5 +1,8 @@
 import { baseApi } from "@store/api/base.api"
-import type { DailyTransaction, DailyTransactionsResponse } from "../types/daily-transaction.types"
+import type { 
+  DailyTransaction, 
+  DailyTransactionsResponse
+} from "../types/daily-transaction.types"
 import type { DailyTransactionFormData } from "../validation/daily-transaction.schemas"
 
 interface BaseResponse<T> {
