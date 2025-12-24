@@ -39,17 +39,16 @@ export const planApi = injectCRUD<Plan>({
   }),
 })
 
-export const {
-  useGetAllQuery: useGetPlansQuery,
-  useGetByIdQuery: useGetPlanByIdQuery,
-  useCreateMutation: useCreatePlanMutation,
-  useUpdateMutation: useUpdatePlanMutation,
-  useRemoveMutation: useDeletePlanMutation,
-} = planApi
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const planEndpoints = (planApi as any).endpoints
 
-// Export custom endpoint hooks manually
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useGetSelfPlansQuery = (planApi as any).endpoints.getSelfPlans.useQuery
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useUpdatePlanStatusMutation = (planApi as any).endpoints.updatePlanStatus.useMutation
+export const useGetPlansQuery = planEndpoints.getAllPlan.useQuery
+export const useGetPlanByIdQuery = planEndpoints.getPlanById.useQuery
+export const useCreatePlanMutation = planEndpoints.createPlan.useMutation
+export const useUpdatePlanMutation = planEndpoints.updatePlan.useMutation
+export const useDeletePlanMutation = planEndpoints.removePlan.useMutation
+
+export const useGetSelfPlansQuery = planEndpoints.getSelfPlans.useQuery
+export const useUpdatePlanStatusMutation = planEndpoints.updatePlanStatus.useMutation
+
 

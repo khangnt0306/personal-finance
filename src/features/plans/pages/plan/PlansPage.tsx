@@ -111,33 +111,33 @@ export const PlansPage = () => {
           ]}
         />
 
-        <DataToolbar
-          searchValue={searchTerm}
-          onSearchChange={setSearchTerm}
-          searchPlaceholder="Tìm kế hoạch theo tên hoặc mô tả"
-          viewOptions={[
-            { label: "Tất cả", value: "all" },
-            { label: "Hàng ngày", value: "DAILY" },
-            { label: "Hàng tuần", value: "WEEKLY" },
-            { label: "Hàng tháng", value: "MONTHLY" },
-            { label: "Hàng năm", value: "YEARLY" },
-          ]}
-          currentView={planTypeFilter}
-          onViewChange={(value) => setPlanTypeFilter(value as PlanType | "all")}
-          actions={
-            <Button
-              variant="ghost"
+      <DataToolbar
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Tìm kế hoạch theo tên hoặc mô tả"
+        viewOptions={[
+          { label: "Tất cả", value: "all" },
+          { label: "Hàng ngày", value: "DAILY" },
+          { label: "Hàng tuần", value: "WEEKLY" },
+          { label: "Hàng tháng", value: "MONTHLY" },
+          { label: "Hàng năm", value: "YEARLY" },
+        ]}
+        currentView={planTypeFilter}
+        onViewChange={(value) => setPlanTypeFilter(value as PlanType | "all")}
+        actions={
+          <Button
+            variant="ghost"
               size="sm"
-              className="w-full sm:w-auto"
-              onClick={() => {
-                setSearchTerm("")
-                setPlanTypeFilter("all")
-              }}
-            >
-              Đặt lại
-            </Button>
-          }
-        />
+            className="w-full sm:w-auto"
+            onClick={() => {
+              setSearchTerm("")
+              setPlanTypeFilter("all")
+            }}
+          >
+            Đặt lại
+          </Button>
+        }
+      />
 
         {isLoading || isFetching ? (
           <div className="space-y-4">

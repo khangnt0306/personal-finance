@@ -6,8 +6,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@components/ui/sheet"
-import { Button } from "@components/ui/button"
-import { Plus } from "lucide-react"
 import { useGetDailyTransactionsQuery } from "../../api/daily-transaction.api"
 import type { DailyTransaction, DefaultTransaction } from "../../types/daily-transaction.types"
 import type { DailyTransactionsDrawerProps, SummaryStats } from "./types"
@@ -16,6 +14,7 @@ import { DrawerTransactionForm } from "./drawer-transaction-form"
 import { DrawerDefaultTransactionForm } from "./drawer-default-transaction-form"
 import { DrawerTransactionsList } from "./drawer-transactions-list"
 import { parseISO, isToday } from "date-fns"
+import { AnimatedPlusButton } from "@components/common/AnimatedPlusButton"
 
 export const DailyTransactionsDrawer = ({
   open,
@@ -117,8 +116,8 @@ export const DailyTransactionsDrawer = ({
         <div className="mt-6 space-y-4">
           {/* Summary Statistics */}
           {!isLoading && transactionsData?.days && transactionsData.days.length > 0 && planItem && (
-            <DrawerSummaryStats 
-              summary={summary} 
+            <DrawerSummaryStats
+              summary={summary}
               currency={currency}
               planId={planId}
               itemId={planItem.id}
@@ -127,25 +126,13 @@ export const DailyTransactionsDrawer = ({
               onCreateDefault={handleCreateDefaultNew}
             />
           )}
-
-          {/* Create Button */}
-          {!isCreating && planItem && (
-            <div className="flex justify-center">
-              <Button
-                onClick={handleCreateNew}
-                size="lg"
-                className="p-6 pr-[16px] flex justify-center group relative overflow-hidden rounded-full bg-gradient-to-br from-blue-50/80 via-sky-50/70 to-cyan-50/80 backdrop-blur-xl border-[1px] border-blue-200/30 text-blue-700 shadow-md hover:shadow-xl hover:shadow-blue-200/40 hover:border-blue-300/50 hover:bg-gradient-to-br hover:from-blue-100/60 hover:via-sky-100/50 hover:to-cyan-100/60 transition-all duration-300 hover:rounded-full hover:px-8"
-              >
-                <div className="flex items-center gap-2">
-                  <Plus className="h-5 w-5 shrink-0 transition-all duration-500 group-hover:rotate-180 group-hover:scale-110" />
-                  <p className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:max-w-xs group-hover:opacity-100 font-medium">
-                    Thêm giao dịch
-                  </p>
-                </div>
-              </Button>
-            </div>
-          )}
-
+          <div className="flex justify-center">
+            <AnimatedPlusButton
+              label="Thêm giao dịch"
+              onClick={handleCreateNew}
+              className="w-full sm:w-auto"
+            />
+          </div>
           {/* Create/Edit Form */}
           {isCreating && planItem && (
             <>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { cn } from "@lib/utils"
-import { Wallet, TrendingUp, PieChart, Settings, Home, List, Menu, X, LogOut, Bell } from "lucide-react"
+import { TrendingUp, PieChart, Settings, Home, List, Menu, X, LogOut, Bell, PiggyBank } from "lucide-react"
 import { Button } from "@components/ui/button"
 import { MotionContainer } from "@components/ui/motion-primitives"
 import { drawerTransition, overlayTransition } from "../styles/motion"  
@@ -14,7 +14,7 @@ import MoneyIcon from "../../public/icons/money-icon.svg"
 const navigation = [
   { name: "Tổng quan", href: "/", icon: Home }, 
   { name: "Kế hoạch", href: "/plans", icon: List },
-  { name: "Giao dịch", href: "/transactions", icon: Wallet },
+  { name: "Tiết kiệm", href: "/savings", icon: PiggyBank },
   { name: "Ngân sách", href: "/budgets", icon: TrendingUp },
   { name: "Báo cáo", href: "/reports", icon: PieChart },
   { name: "Cài đặt", href: "/settings", icon: Settings },

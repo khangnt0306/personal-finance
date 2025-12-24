@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react"
-import { Button } from "@components/ui/button"
+import { AnimatedPlusButton } from "@components/common/AnimatedPlusButton"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card"
 import { Skeleton } from "@components/ui/skeleton"
-import { Plus } from "lucide-react"
 import type { Plan, PlanItem } from "@features/plans/types"
 import type { Category } from "@core/types"
 import { PlanItemsFilter, type FilterType } from "./plan-items-filter"
@@ -41,18 +40,7 @@ export const PlanItemsSection = ({
     <>
       {/* Create Plan Item Button - Circular Expandable */}
       <div className="flex justify-center mb-4 sm:mb-0">
-        <Button
-          onClick={onCreateItem}
-          size="lg"
-          className="p-4 pr-[12px] sm:p-6 sm:pr-[16px] flex justify-center group relative overflow-hidden rounded-full bg-gradient-to-br from-cyan-50 via-sky-50 to-blue-50 border-[1px] border-sky-200/60 text-sky-700 shadow-md hover:shadow-xl hover:shadow-sky-100/50 hover:border-sky-300 hover:bg-gradient-to-br hover:from-cyan-/50 hover:via-sky-100/50 hover:to-blue-100/50 transition-all duration-300 hover:rounded-full hover:px-6 sm:hover:px-8"
-        >
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <Plus className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 transition-all duration-500 group-hover:rotate-180 group-hover:scale-110" />
-            <p className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:max-w-xs group-hover:opacity-100 font-medium text-sm sm:text-base">
-              Tạo hạng mục mới
-            </p>
-          </div>
-        </Button>
+        <AnimatedPlusButton label="Tạo hạng mục mới" onClick={onCreateItem} />
       </div>
 
       {/* Plan Items Section */}

@@ -39,6 +39,7 @@ import {
 } from "@features/categories"
 import type { Category } from "@core/types"
 import { showSuccess, showError } from "@lib/toast"
+import type { BaseResponseWithMessage } from "src/types/baseResType"
 
 interface CategorySelectModalProps {
   open: boolean
@@ -143,19 +144,16 @@ export const CategorySelectModal = ({
   const handleSubmit = async (data: CategoryFormData) => {
     try {
       if (editingCategory) {
-        // Update existing category
         await updateCategory({ id: editingCategory.id, data }).unwrap()
-        showSuccess("Category updated successfully")
+        showSuccess("Cập nhật hạng mục thành công")
         handleCancelForm()
       } else {
-        // Create new category
         await createCategory(data).unwrap()
-        showSuccess("Category created successfully")
+        showSuccess("Tạo hạng mục thành công")
         handleCancelForm()
       }
     } catch (error) {
-      console.error("Error saving category:", error)
-      showError("Failed to save category")
+      showError((error as BaseResponseWithMessage).data?.message?.[0] || "Lỗi lưu hạng mục")
     }
   }
 
@@ -168,9 +166,9 @@ export const CategorySelectModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Select Category</DialogTitle>
+          <DialogTitle>Chọn hạng mục</DialogTitle>
           <DialogDescription>
-            Choose a category or create a new one
+            Chọn một hạng mục hoặc tạo mới
             {filterType && ` (${filterType} categories only)`}
           </DialogDescription>
         </DialogHeader>
@@ -223,7 +221,7 @@ export const CategorySelectModal = ({
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Name</FormLabel>
+                          <FormLabel>Tên hạng mục</FormLabel>
                           <FormControl>
                             <Input placeholder="Category name" {...field} />
                           </FormControl>
@@ -237,10 +235,10 @@ export const CategorySelectModal = ({
                       name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (Optional)</FormLabel>
+                          <FormLabel>Mô tả (Tùy chọn)</FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="Category description"
+                              placeholder="Mô tả hạng mục"
                               rows={2}
                               {...field}
                             />
@@ -256,7 +254,7 @@ export const CategorySelectModal = ({
                         name="type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Type</FormLabel>
+                            <FormLabel>Loại</FormLabel>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
@@ -264,12 +262,12 @@ export const CategorySelectModal = ({
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select type" />
+                                  <SelectValue placeholder="Chọn loại" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="INCOME">Income</SelectItem>
-                                <SelectItem value="EXPENSE">Expense</SelectItem>
+                                <SelectItem value="INCOME">Thu</SelectItem>
+                                <SelectItem value="EXPENSE">Chi</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -282,19 +280,19 @@ export const CategorySelectModal = ({
                         name="status"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Status</FormLabel>
+                            <FormLabel>Trạng thái</FormLabel>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select status" />
+                                  <SelectValue placeholder="Chọn trạng thái" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="ACTIVE">Active</SelectItem>
-                                <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                <SelectItem value="ACTIVE">Hoạt động</SelectItem>
+                                <SelectItem value="INACTIVE">Không hoạt động</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -308,9 +306,9 @@ export const CategorySelectModal = ({
                       name="Icon"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Icon Name (Optional)</FormLabel>
+                          <FormLabel>Tên Icon (Tùy chọn)</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., wallet, shopping-cart" {...field} />
+                            <Input placeholder="Ví, giỏ hàng, ..." {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -319,14 +317,14 @@ export const CategorySelectModal = ({
 
                     <div className="flex gap-2 justify-end">
                       <Button type="button" variant="outline" onClick={handleCancelForm}>
-                        Cancel
+                        Hủy
                       </Button>
                       <Button type="submit" disabled={isCreating_API || isUpdating}>
                         {isCreating_API || isUpdating
                           ? "Saving..."
                           : editingCategory
-                          ? "Update"
-                          : "Create"}
+                            ? "Update"
+                            : "Create"}
                       </Button>
                     </div>
                   </form>
@@ -379,7 +377,7 @@ export const CategorySelectModal = ({
                               <Badge variant="outline">
                                 {category.type}
                               </Badge>
-                              <Badge 
+                              <Badge
                                 variant={category.status === "ACTIVE" ? "default" : "secondary"}
                               >
                                 {category.status}

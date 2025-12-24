@@ -96,13 +96,13 @@ export const DrawerTransactionForm = ({
             label: data.label,
             amount: data.amount,
           }
-          await updateTransaction({
-            planId,
-            itemId: planItem.id,
-            transactionId: editingTransaction.id,
+        await updateTransaction({
+          planId,
+          itemId: planItem.id,
+          transactionId: editingTransaction.id,
             data: regularPayload,
-          }).unwrap()
-          showSuccess("Đã cập nhật giao dịch")
+        }).unwrap()
+        showSuccess("Đã cập nhật giao dịch")
         }
       } else {
         // Create new transaction
@@ -126,12 +126,12 @@ export const DrawerTransactionForm = ({
             label: data.label,
             amount: data.amount,
           }
-          await createTransaction({
-            planId,
-            itemId: planItem.id,
+        await createTransaction({
+          planId,
+          itemId: planItem.id,
             data: regularPayload,
-          }).unwrap()
-          showSuccess("Tạo giao dịch thành công")
+        }).unwrap()
+        showSuccess("Tạo giao dịch thành công")
         }
       }
       onSuccess()
@@ -177,22 +177,22 @@ export const DrawerTransactionForm = ({
               />
             )}
             {!(planItem.type === "EXPENSE" && planItem.excludeType !== "FIXED") && !isDefaultChecked && (
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs sm:text-sm">Ngày</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Calendar className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                        <Input type="date" {...field} className="pl-8 sm:pl-10 text-xs sm:text-sm h-9 sm:h-10" />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs sm:text-sm">Ngày</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Calendar className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                      <Input type="date" {...field} className="pl-8 sm:pl-10 text-xs sm:text-sm h-9 sm:h-10" />
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
             )}
 
             <FormField
@@ -200,7 +200,7 @@ export const DrawerTransactionForm = ({
               name="label"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs sm:text-sm">Mô tả</FormLabel>
+                  <FormLabel className="text-xs sm:text-sm">Mô tả</FormLabel>  
                   <FormControl>
                     <div className="relative">
                       <Tag className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />

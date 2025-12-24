@@ -8,6 +8,7 @@ import { goalRoutes } from "./goalRoutes"
 import { reportRoutes } from "./reportRoutes"
 import { accountRoutes } from "./accountRoutes"
 import { settingsRoutes } from "./settingsRoutes"
+import { savingsRoutes } from "./savingsRoutes"
 
 export const privateRoutes: RouteObject[] = [
   ...appRoutes,
@@ -19,6 +20,7 @@ export const privateRoutes: RouteObject[] = [
   ...reportRoutes,
   ...accountRoutes,
   ...settingsRoutes,
+  ...savingsRoutes,
 ]
 
 
